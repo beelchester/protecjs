@@ -6,14 +6,14 @@ Client-side attack protection React library
 
 Build protecjs:
 ```bash
-bun i
-bun run build
+yarn
+yarn build
 ```
 
 Run example:
 ```bash
 cd examples/Textinput
-bun i
-bun run dev
+yarn
+yarn dev
 ```
 
