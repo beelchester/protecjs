@@ -2,6 +2,7 @@
   "name": "protecjs",
   "version": "0.0.1",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "dependencies": {
     "@types/dompurify": "^3.0.5",
     "@types/react": "^18.3.3",
@@ -21,6 +22,5 @@
   "scripts": {
     "build": "tsc",
     "test": "jest"
-  },
-  "types": "dist/types/index.d.ts"
+  }
 }
