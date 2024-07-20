@@ -1,20 +1,44 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import TextInput  from '../components/TextInput';
+import TextInput from '../components/TextInput';
+import DOMPurify from 'dompurify';
 
 const handleChange = jest.fn();
-const Wrapper = () => {
-  const [value, setValue] = useState('');
+
+interface DOMPurifyConfig {
+  ALLOWED_TAGS: string[];
+  ALLOWED_ATTR: string[];
+  FORBID_TAGS: string[];
+  FORBID_ATTR: string[];
+  ALLOW_DATA_ATTR: boolean;
+  ALLOW_UNKNOWN_PROTOCOLS: boolean;
+  USE_PROFILES: { [profile: string]: boolean };
+  SANITIZE_DOM: boolean;
+  KEEP_CONTENT: boolean;
+  RETURN_TRUSTED_TYPE: boolean;
+}
+
+const Wrapper = ({ dompurifyConfig }: { dompurifyConfig?: DOMPurifyConfig }) => {
+  const [value, setValue] = React.useState('');
   const onChange = (newValue: string) => {
     setValue(newValue);
     handleChange(newValue);
   };
-  return <TextInput value={value} onChange={onChange} />;
+
+  const sanitizedValue = React.useMemo(() => {
+    if (dompurifyConfig) {
+      return DOMPurify.sanitize(value, dompurifyConfig);
+    } else {
+      return value;
+    }
+  }, [value, dompurifyConfig]);
+
+  return <TextInput value={sanitizedValue} onChange={onChange} dompurifyConfig={dompurifyConfig} />;
 };
 
 test('renders input', () => {
-  render(<TextInput value="" onChange={() => {}} />);
+  render(<Wrapper />);
   const inputElement = screen.getByRole('textbox');
   expect(inputElement).toBeInTheDocument();
 });
@@ -33,8 +57,9 @@ test('sanitizes input', () => {
   const inputElement = screen.getByRole('textbox');
 
   fireEvent.change(inputElement, { target: { value: '<img src=x onerror=alert(1)//>' } });
-  expect(inputElement).toHaveValue('<img src="x">');
-  expect(handleChange).toHaveBeenCalledWith('<img src="x">');
+  const expectedValue = '<img src="x">';
+  expect(inputElement).toHaveValue(expectedValue);
+  expect(handleChange).toHaveBeenCalledWith(expectedValue);
 });
 
 test('sanitizes various inputs with DOMPurify', () => {
@@ -58,7 +83,42 @@ test('sanitizes various inputs with DOMPurify', () => {
 
   testCases.forEach(({ input, expected }) => {
     fireEvent.change(inputElement, { target: { value: input } });
-    expect(inputElement).toHaveValue(expected);
-    expect(handleChange).toHaveBeenCalledWith(expected);
+    const lastCallArgs = handleChange.mock.calls.slice(-1)[0];
+    const sanitizedValue = lastCallArgs[0];
+    
+    if (typeof sanitizedValue === 'string') {
+      expect(inputElement).toHaveValue(expected);
+      expect(handleChange).toHaveBeenCalledWith(expected);
+    } else if (typeof sanitizedValue === 'object' && sanitizedValue.toString) {
+      const trustedHTMLString = sanitizedValue.toString();
+      expect(trustedHTMLString).toEqual(expected);
+      expect(handleChange).toHaveBeenCalledWith(trustedHTMLString);
+    } else {
+      fail('Unexpected return type from handleChange');
+    }
   });
+});
+
+test('uses dompurifyConfig to sanitize input', () => {
+  const dompurifyConfig: DOMPurifyConfig = {
+    ALLOWED_TAGS: ['a', 'b', 'strong', 'i', 'em', 'p', 'div', 'img', 'ul', 'li', 'table', 'tr', 'td', 'math', 'mi'],
+    ALLOWED_ATTR: ['href', 'title', 'alt'],
+    FORBID_TAGS: ['style', 'script'],
+    FORBID_ATTR: ['style', 'onclick'],
+    ALLOW_DATA_ATTR: true,
+    ALLOW_UNKNOWN_PROTOCOLS: false,
+    USE_PROFILES: { html: true },
+    SANITIZE_DOM: true,
+    KEEP_CONTENT: false,
+    RETURN_TRUSTED_TYPE: true, 
+  };
+
+  render(<Wrapper dompurifyConfig={dompurifyConfig} />);
+  const inputElement = screen.getByRole('textbox');
+
+  fireEvent.change(inputElement, { target: { value: '<script>alert("XSS")</script>' } });
+
+  const expectedValue = '';
+  expect(inputElement).toHaveValue(expectedValue);
+  expect(handleChange).toHaveBeenCalledWith(expectedValue);
 });
