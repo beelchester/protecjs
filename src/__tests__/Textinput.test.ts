@@ -1,17 +1,17 @@
 import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import TextInput  from '../components/TextInput';
+import TextInput from '../components/TextInput';
 
 test('renders input', () => {
-  render(<TextInput value="" onChange={() => {}} />);
-  const inputElement = screen.getByRole('textbox');
-  expect(inputElement).toBeInTheDocument();
+  render(<TextInput value="" onChange = {() => {}} />);
+const inputElement = screen.getByRole('textbox');
+expect(inputElement).toBeInTheDocument();
 });
 
 test('prints input', () => {
   const handleChange = jest.fn();
-  render(<TextInput value="" onChange={handleChange} />);
+  render(<TextInput value="" onChange = { handleChange } />);
   const inputElement = screen.getByRole('textbox');
 
   fireEvent.change(inputElement, { target: { value: 'Test' } });
@@ -19,22 +19,14 @@ test('prints input', () => {
   expect(handleChange).toHaveBeenCalledWith('Test');
 });
 
-test('sanitizes input', () => {
-  const handleChange = jest.fn();
-  render(<TextInput value="" onChange={handleChange} />);
-  const inputElement = screen.getByRole('textbox');
-
-  fireEvent.change(inputElement, { target: { value: '<img src=x onerror=alert(1)//>' } });
-  expect(inputElement).toHaveValue('<img src="x">');
-  expect(handleChange).toHaveBeenCalledWith('<img src="x">');
-});
 
 test('sanitizes various inputs with DOMPurify', () => {
   const handleChange = jest.fn();
-  render(<TextInput value="" onChange={handleChange} />);
+  render(<TextInput value="" onChange = { handleChange } />);
   const inputElement = screen.getByRole('textbox');
 
   const testCases = [
+    { input: '<img src=x onerror=alert(1)//>', expected: '<img src="x">' }
     { input: '<script>alert("XSS")</script>', expected: '' },
     { input: '<a href="javascript:alert(1)">Click me</a>', expected: '<a>Click me</a>' },
     { input: '<div onclick="alert(1)">Hello</div>', expected: '<div>Hello</div>' },
