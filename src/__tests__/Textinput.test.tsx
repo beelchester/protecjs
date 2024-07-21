@@ -28,20 +28,13 @@ test('prints input', () => {
   expect(handleChange).toHaveBeenCalledWith('Test');
 });
 
-test('sanitizes input', () => {
-  render(<Wrapper />);
-  const inputElement = screen.getByRole('textbox');
-
-  fireEvent.change(inputElement, { target: { value: '<img src=x onerror=alert(1)//>' } });
-  expect(inputElement).toHaveValue('<img src="x">');
-  expect(handleChange).toHaveBeenCalledWith('<img src="x">');
-});
 
 test('sanitizes various inputs with DOMPurify', () => {
   render(<Wrapper />);
   const inputElement = screen.getByRole('textbox');
 
   const testCases = [
+    {input:'<img src=x onerror=alert(1)//>',expected: '<img src="x">'},
     { input: '<script>alert("XSS")</script>', expected: '' },
     { input: '<a href="javascript:alert(1)">Click me</a>', expected: '<a>Click me</a>' },
     { input: '<div onclick="alert(1)">Hello</div>', expected: '<div>Hello</div>' },
