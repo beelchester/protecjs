@@ -23,5 +23,3 @@ const TextInput: React.FC<TextInputProps> = ({ value, onChange, dompurifyConfig,
 };
 
 export default TextInput;
-
-export default TextInput;
