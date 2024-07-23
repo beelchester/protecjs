@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import { render, fireEvent, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TextInput from '../components/TextInput';
 
+afterEach(cleanup);
 const handleChange = jest.fn();
 const Wrapper = ({ dompurifyConfig }: { dompurifyConfig?: { [key: string]: any } }) => {
   const [value, setValue] = useState('');
@@ -14,7 +15,7 @@ const Wrapper = ({ dompurifyConfig }: { dompurifyConfig?: { [key: string]: any }
 };
 
 test('renders input', () => {
-  render(<TextInput value="" onChange={() => {}} />);
+  render(<TextInput value="" onChange={() => { }} />);
   const inputElement = screen.getByRole('textbox');
   expect(inputElement).toBeInTheDocument();
 });
@@ -27,50 +28,6 @@ test('prints input', () => {
   expect(inputElement).toHaveValue('Test');
   expect(handleChange).toHaveBeenCalledWith('Test');
 });
-
-
-test('sanitizes input as per the dompurifyConfig', () => {
-  render(
-    <Wrapper
-      dompurifyConfig={{
-        ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a'],
-        ALLOWED_ATTR: ['href'],
-        FORBID_TAGS: ['script'],
-        FORBID_ATTR: ['onclick'],
-        ALLOW_DATA_ATTR: false,
-        ALLOW_UNKNOWN_PROTOCOLS: false,
-        USE_PROFILES: {},
-        SANITIZE_DOM: false,
-        KEEP_CONTENT: false,
-        RETURN_TRUSTED_TYPE: false,
-      }}
-    />
-  );
-  const inputElement = screen.getByRole('textbox') as HTMLInputElement;
-
-  const testCases = [
-    { input: '<b>Bold</b>', expected: '<b>Bold</b>' },
-    { input: '<i>Italic</i>', expected: '<i>Italic</i>' },
-    { input: '<em>Emphasis</em>', expected: '<em>Emphasis</em>' },
-    { input: '<strong>Strong</strong>', expected: '<strong>Strong</strong>' },
-    { input: '<a href="http://example.com">Link</a>', expected: '<a href="http://example.com">Link</a>' },
-    { input: '<script>alert("XSS")</script>', expected: '' },
-    { input: '<div>Hello</div>', expected: 'Hello' },
-    { input: '<marquee>Hello world</marquee>', expected: 'Hello world' },
-  ];
-
-  testCases.forEach(({ input, expected }) => {
-    fireEvent.change(inputElement, { target: { value: input } });
-
-    expect(handleChange).toHaveBeenCalledWith(expected);
-
-    const sanitizedValue = inputElement.value;
-
-    expect(sanitizedValue).toBe(expected);
-  })
-
-});
-
 
 test('sanitizes various inputs with DOMPurify', () => {
   render(<Wrapper />);
@@ -90,6 +47,37 @@ test('sanitizes various inputs with DOMPurify', () => {
     { input: '<svg><script xlink:href="data:application/javascript;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4="></script></svg>', expected: '<svg></svg>' },
     { input: '<a href=\'javascript:alert(1)\'>Click me</a>', expected: '<a>Click me</a>' },
     { input: '<input type=\'text\' value=\'\'><img src=\'x\' onerror=\'alert(1)\'>', expected: '<input value="" type="text"><img src="x">' },
+  ];
+
+  testCases.forEach(({ input, expected }) => {
+    fireEvent.change(inputElement, { target: { value: input } });
+    expect(inputElement).toHaveValue(expected);
+    expect(handleChange).toHaveBeenCalledWith(expected);
+  });
+});
+
+test('sanitizes input as per the dompurifyConfig', () => {
+  render(
+    <Wrapper
+      dompurifyConfig={{
+        ALLOWED_TAGS: ['i', 'em', 'strong', 'a'],
+        ALLOWED_ATTR: ['href'],
+        FORBID_TAGS: ['script'],
+        FORBID_ATTR: ['onclick'],
+      }}
+    />
+  );
+  const inputElement = screen.getByRole('textbox');
+
+  const testCases = [
+    { input: '<b>Bold</b>', expected: 'Bold' },
+    { input: '<i>Italic</i>', expected: '<i>Italic</i>' },
+    { input: '<em>Emphasis</em>', expected: '<em>Emphasis</em>' },
+    { input: '<strong>Strong</strong>', expected: '<strong>Strong</strong>' },
+    { input: '<a href="http://example.com">Link</a>', expected: '<a href="http://example.com">Link</a>' },
+    { input: '<script>alert("XSS")</script>', expected: '' },
+    { input: '<div>Hello</div>', expected: 'Hello' },
+    { input: '<marquee>Hello world</marquee>', expected: 'Hello world' },
   ];
 
   testCases.forEach(({ input, expected }) => {

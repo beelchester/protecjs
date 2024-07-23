@@ -22,12 +22,8 @@ interface BaseElementProps {
 
 const BaseElement: React.FC<BaseElementProps> = ({ tag: Tag, value, onChange, dompurify, ...props }) => {
   const handleChange = (event: React.ChangeEvent<any>) => {
-    console.log(dompurify)
-   
     const sanitizedValue = DOMPurify.sanitize(event.target.value, dompurify || {});
-
     onChange(sanitizedValue);
-    
   };
 
   return <Tag {...props} value={value} onChange={handleChange} />;
