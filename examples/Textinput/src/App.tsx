@@ -6,7 +6,14 @@ function App() {
   const [text, setText] = useState('');
   return (
     <div>
-      <TextInput value={text} onChange={setText} />
+      <TextInput value={text} onChange={setText}
+        dompurify={{
+          ALLOWED_TAGS: ['i', 'em', 'strong', 'a'],
+          ALLOWED_ATTR: ['href'],
+          FORBID_TAGS: ['script'],
+          FORBID_ATTR: ['onclick'],
+        }}
+      />
       <p>Sanitized Text: {text}</p>
     </div>
   )
