@@ -1,44 +1,21 @@
-import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
+import React, { useState } from 'react';
+import { render, fireEvent, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TextInput from '../components/TextInput';
-import DOMPurify from 'dompurify';
 
+afterEach(cleanup);
 const handleChange = jest.fn();
-
-interface DOMPurifyConfig {
-  ALLOWED_TAGS: string[];
-  ALLOWED_ATTR: string[];
-  FORBID_TAGS: string[];
-  FORBID_ATTR: string[];
-  ALLOW_DATA_ATTR: boolean;
-  ALLOW_UNKNOWN_PROTOCOLS: boolean;
-  USE_PROFILES: { [profile: string]: boolean };
-  SANITIZE_DOM: boolean;
-  KEEP_CONTENT: boolean;
-  RETURN_TRUSTED_TYPE: boolean;
-}
-
-const Wrapper = ({ dompurifyConfig }: { dompurifyConfig?: DOMPurifyConfig }) => {
-  const [value, setValue] = React.useState('');
+const Wrapper = ({ dompurifyConfig }: { dompurifyConfig?: { [key: string]: any } }) => {
+  const [value, setValue] = useState('');
   const onChange = (newValue: string) => {
     setValue(newValue);
     handleChange(newValue);
   };
-
-  const sanitizedValue = React.useMemo(() => {
-    if (dompurifyConfig) {
-      return DOMPurify.sanitize(value, dompurifyConfig);
-    } else {
-      return value;
-    }
-  }, [value, dompurifyConfig]);
-
-  return <TextInput value={sanitizedValue} onChange={onChange} dompurifyConfig={dompurifyConfig} />;
+  return <TextInput value={value} onChange={onChange} dompurify={dompurifyConfig} />;
 };
 
 test('renders input', () => {
-  render(<Wrapper />);
+  render(<TextInput value="" onChange={() => { }} />);
   const inputElement = screen.getByRole('textbox');
   expect(inputElement).toBeInTheDocument();
 });
@@ -52,21 +29,12 @@ test('prints input', () => {
   expect(handleChange).toHaveBeenCalledWith('Test');
 });
 
-test('sanitizes input', () => {
-  render(<Wrapper />);
-  const inputElement = screen.getByRole('textbox');
-
-  fireEvent.change(inputElement, { target: { value: '<img src=x onerror=alert(1)//>' } });
-  const expectedValue = '<img src="x">';
-  expect(inputElement).toHaveValue(expectedValue);
-  expect(handleChange).toHaveBeenCalledWith(expectedValue);
-});
-
 test('sanitizes various inputs with DOMPurify', () => {
   render(<Wrapper />);
   const inputElement = screen.getByRole('textbox');
 
   const testCases = [
+    { input: '<img src=x onerror=alert(1)//>', expected: '<img src="x">' },
     { input: '<script>alert("XSS")</script>', expected: '' },
     { input: '<a href="javascript:alert(1)">Click me</a>', expected: '<a>Click me</a>' },
     { input: '<div onclick="alert(1)">Hello</div>', expected: '<div>Hello</div>' },
@@ -83,42 +51,51 @@ test('sanitizes various inputs with DOMPurify', () => {
 
   testCases.forEach(({ input, expected }) => {
     fireEvent.change(inputElement, { target: { value: input } });
-    const lastCallArgs = handleChange.mock.calls.slice(-1)[0];
-    const sanitizedValue = lastCallArgs[0];
-    
-    if (typeof sanitizedValue === 'string') {
-      expect(inputElement).toHaveValue(expected);
-      expect(handleChange).toHaveBeenCalledWith(expected);
-    } else if (typeof sanitizedValue === 'object' && sanitizedValue.toString) {
-      const trustedHTMLString = sanitizedValue.toString();
-      expect(trustedHTMLString).toEqual(expected);
-      expect(handleChange).toHaveBeenCalledWith(trustedHTMLString);
-    } else {
-      fail('Unexpected return type from handleChange');
-    }
+    expect(inputElement).toHaveValue(expected);
+    expect(handleChange).toHaveBeenCalledWith(expected);
   });
 });
 
-test('uses dompurifyConfig to sanitize input', () => {
-  const dompurifyConfig: DOMPurifyConfig = {
-    ALLOWED_TAGS: ['a', 'b', 'strong', 'i', 'em', 'p', 'div', 'img', 'ul', 'li', 'table', 'tr', 'td', 'math', 'mi'],
-    ALLOWED_ATTR: ['href', 'title', 'alt'],
-    FORBID_TAGS: ['style', 'script'],
-    FORBID_ATTR: ['style', 'onclick'],
-    ALLOW_DATA_ATTR: true,
-    ALLOW_UNKNOWN_PROTOCOLS: false,
-    USE_PROFILES: { html: true },
-    SANITIZE_DOM: true,
-    KEEP_CONTENT: false,
-    RETURN_TRUSTED_TYPE: true, 
-  };
+test('sanitizes input as per the dompurifyConfig', () => {
+  render(
+    <Wrapper
+      dompurifyConfig={{
+        ALLOWED_TAGS: [ 'i','em', 'strong', 'a'],
+        ALLOWED_ATTR: ['href'],
+        FORBID_TAGS: ['script'],
+        FORBID_ATTR: ['onclick'],
+        ALLOW_ARIA_ATTR: true,
+        NAMESPACE: 'http://www.w3.org/2000/svg',
+        FORCE_BODY: true,
+        FORBID_CSS: false,
+        ALLOW_CSS_CLASSES: ['class1', 'class2'],
+        SAFE_FOR_TWITTER: true
 
-  render(<Wrapper dompurifyConfig={dompurifyConfig} />);
+      }}
+    />
+  );
   const inputElement = screen.getByRole('textbox');
 
-  fireEvent.change(inputElement, { target: { value: '<script>alert("XSS")</script>' } });
+  const testCases = [
+    { input: '<b>Bold</b>', expected: 'Bold' },
+    { input: '<i>Italic</i>', expected: 'Italic' },
+    { input: '<em>Emphasis</em>', expected: '<em>Emphasis</em>' },
+    { input: '<strong>Strong</strong>', expected: '<strong>Strong</strong>' },
+    { input: '<a href="http://example.com">Link</a>', expected: '<a href="http://example.com">Link</a>' },
+    { input: '<script>alert("XSS")</script>', expected: '' },
+    { input: '<div>Hello</div>', expected: 'Hello' },
+    { input: '<marquee>Hello world</marquee>', expected: 'Hello world' },
+    { input: '<div aria-label="Test">Content</div>', expected: '<div aria-label="Test">Content</div>' },
+    { input: '<svg><circle></circle></svg>', expected: '<svg><circle></circle></svg>' },
+    { input: '<html><body>Hello</body></html>', expected: '<html><body>Hello</body></html>' },
+    { input: '<div style="color:red;">Styled</div>', expected: '<div style="color:red;">Styled</div>' },
+    { input: '<div class="class1">Content</div>', expected: '<div class="class1">Content</div>' },
+    { input: '<a href="http://example.com">Link</a>', expected: '<a href="http://example.com">Link</a>' } 
+  ];
 
-  const expectedValue = '';
-  expect(inputElement).toHaveValue(expectedValue);
-  expect(handleChange).toHaveBeenCalledWith(expectedValue);
+  testCases.forEach(({ input, expected }) => {
+    fireEvent.change(inputElement, { target: { value: input } });
+    expect(inputElement).toHaveValue(expected);
+    expect(handleChange).toHaveBeenCalledWith(expected);
+  });
 });
