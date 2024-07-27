@@ -60,10 +60,17 @@ test('sanitizes input as per the dompurifyConfig', () => {
   render(
     <Wrapper
       dompurifyConfig={{
-        ALLOWED_TAGS: ['i', 'em', 'strong', 'a'],
+        ALLOWED_TAGS: ['em', 'strong', 'a'],
         ALLOWED_ATTR: ['href'],
         FORBID_TAGS: ['script'],
         FORBID_ATTR: ['onclick'],
+        ALLOW_ARIA_ATTR: true,
+        FORCE_BODY: true,
+        FORBID_CSS: false,
+        ALLOW_CSS_CLASSES: ['class1', 'class2'],
+        SAFE_FOR_TWITTER: true,
+        IN_PLACE: true,
+
       }}
     />
   );
@@ -71,13 +78,17 @@ test('sanitizes input as per the dompurifyConfig', () => {
 
   const testCases = [
     { input: '<b>Bold</b>', expected: 'Bold' },
-    { input: '<i>Italic</i>', expected: '<i>Italic</i>' },
+    { input: '<i>Italic</i>', expected: 'Italic' },
     { input: '<em>Emphasis</em>', expected: '<em>Emphasis</em>' },
     { input: '<strong>Strong</strong>', expected: '<strong>Strong</strong>' },
     { input: '<a href="http://example.com">Link</a>', expected: '<a href="http://example.com">Link</a>' },
     { input: '<script>alert("XSS")</script>', expected: '' },
     { input: '<div>Hello</div>', expected: 'Hello' },
     { input: '<marquee>Hello world</marquee>', expected: 'Hello world' },
+    { input: '<div aria-label="Test">Content</div>', expected: 'Content' },
+    { input: '<html><body>Hello</body></html>', expected: 'Hello' },
+    { input: '<a href="http://example.com">Link</a>', expected: '<a href="http://example.com">Link</a>' },
+    { input: '<html><body><p>Paragraph</p></body></html>', expected: 'Paragraph' },
   ];
 
   testCases.forEach(({ input, expected }) => {
@@ -86,3 +97,4 @@ test('sanitizes input as per the dompurifyConfig', () => {
     expect(handleChange).toHaveBeenCalledWith(expected);
   });
 });
+
