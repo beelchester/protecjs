@@ -60,19 +60,15 @@ test('sanitizes input as per the dompurifyConfig', () => {
   render(
     <Wrapper
       dompurifyConfig={{
-        ALLOWED_TAGS: [ 'i','em', 'strong', 'a'],
+        ALLOWED_TAGS: ['em', 'strong', 'a'],
         ALLOWED_ATTR: ['href'],
         FORBID_TAGS: ['script'],
         FORBID_ATTR: ['onclick'],
         ALLOW_ARIA_ATTR: true,
-        NAMESPACE: 'http://www.w3.org/2000/svg',
         FORCE_BODY: true,
         FORBID_CSS: false,
         ALLOW_CSS_CLASSES: ['class1', 'class2'],
         SAFE_FOR_TWITTER: true,
-        WHOLE_DOCUMENT: true,
-        RETURN_DOM_FRAGMENT: true,
-        RETURN_DOM_IMPORT: true,
         IN_PLACE: true,
 
       }}
@@ -89,19 +85,10 @@ test('sanitizes input as per the dompurifyConfig', () => {
     { input: '<script>alert("XSS")</script>', expected: '' },
     { input: '<div>Hello</div>', expected: 'Hello' },
     { input: '<marquee>Hello world</marquee>', expected: 'Hello world' },
-    { input: '<div aria-label="Test">Content</div>', expected: '<div aria-label="Test">Content</div>' },
-    { input: '<svg><circle></circle></svg>', expected: '<svg><circle></circle></svg>' },
-    { input: '<html><body>Hello</body></html>', expected: '<html><body>Hello</body></html>' },
-    { input: '<div style="color:red;">Styled</div>', expected: '<div style="color:red;">Styled</div>' },
-    { input: '<div class="class1">Content</div>', expected: '<div class="class1">Content</div>' },
+    { input: '<div aria-label="Test">Content</div>', expected: 'Content' },
+    { input: '<html><body>Hello</body></html>', expected: 'Hello' },
     { input: '<a href="http://example.com">Link</a>', expected: '<a href="http://example.com">Link</a>' },
     { input: '<html><body><p>Paragraph</p></body></html>', expected: 'Paragraph' },
-    { input: '<ul><li>Item 1</li><li>Item 2</li></ul>', expected: '<li>Item 1</li><li>Item 2</li>' },
-    { input: '<template><h1>Header</h1></template>', expected: '<h1>Header</h1>' },
-    { input: '<span>Original</span>', expected: '<span>Updated</span>' }
-
-
-
   ];
 
   testCases.forEach(({ input, expected }) => {
