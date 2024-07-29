@@ -66,5 +66,822 @@
 	{
 		"input": "'><script>\\xEF\\xBB\\xBFjavascript:alert(1)</script>'",
 		"expected": "'&gt;'"
+	},
+	{ 
+	"input": "<b>Bold</b>",
+	"expected": "Bold" 
+	},
+	{ 
+		"input": "<i>Italic</i>",
+		"expected": "<i>Italic</i>" 
+	},
+	{ 
+		"input": "<em>Emphasis</em>",
+		"expected": "<em>Emphasis</em>" 
+	},
+	{ 
+		"input": "<strong>Strong</strong>",
+		"expected": "<strong>Strong</strong>" 
+	},
+	{ 
+		"input": "<a href=\"http://example.com\">Link</a>",
+		"expected": "<a href=\"http://example.com\">Link</a>" 
+	},
+	{ 
+		"input": "<script>alert(\"XSS\")</script>",
+		"expected": "" 
+	},
+	{ 
+		"input": "<div>Hello</div>",
+		"expected": "Hello" 
+	},
+	{ 
+		"input": "<marquee>Hello world</marquee>",
+		"expected": "Hello world" 
+	},
+	{ 
+		"input": "<script\\x20type=\"text/javascript\">javascript:alert(1);</script>",
+		"expected":"javascript:alert(1);"
+	},
+	{ 
+		"input": "><\\x00script>javascript:alert(1)</script>",
+		"expected":"&gt;&lt;\\x00script&gt;javascript:alert(1)"
+	},
+	{ 
+		"input": "<script src=1 href=1 onerror=\"javascript:alert(1)\"></script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script onReadyStateChange script onReadyStateChange=\"javascript:javascript:alert(1)\"></script onReadyStateChange>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script onLoad script onLoad=\"javascript:javascript:alert(1)\"></script onLoad>",
+		"expected": ""
+	},
+	{ 
+		"input": "\\x3Cscript>javascript:alert(1)</script>",
+		"expected":"\\x3Cscript&gt;javascript:alert(1)"
+	},
+	{ 
+		"input": "><script>/\\* _\\x2Fjavascript:alert(1)// _/</script>",
+		"expected":"&gt;"
+	},
+	{ 
+		"input": "<script>javascript:alert(1)</script\\x0D",
+		"expected": ""
+	},
+	{ 
+		"input": "<script charset=\"\\x22>javascript:alert(1)</script>",
+		"expected": ""
+	},
+	{ 
+		"input": "><p><svg><script>a='hello\\x27;javascript:alert(1)//';</script></p>",
+		"expected":"&gt;<p><svg></svg></p>"
+	},
+	{ 
+		"input": "<script>/\\* _\\x2A/javascript:alert(1)// _/</script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script>if(\"x\\xE1\\x96\\x89\".length==2) { javascript:alert(1);}</script>",
+		"expected": ""
+	},
+	{ 
+		"input": "><\\x00script>javascript:alert(1)</script>",
+		"expected":"&gt;&lt;\\x00script&gt;javascript:alert(1)"
+	},
+	{ 
+		"input": "<script src=\"data:text/plain\\x2Cjavascript:alert(1)\"></script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script src=\"data:\\xD4\\x8F,javascript:alert(1)\"></script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script\\x20type=\"text/javascript\">javascript:alert(1);</script>",
+		"expected":"javascript:alert(1);"
+	},
+	{ 
+		"input": "><script>\\x0Djavascript:alert(1)</script>",
+		"expected":"&gt;"
+	},
+	{ 
+		"input": "><script>\\xEF\\xBB\\xBFjavascript:alert(1)</script>",
+		"expected":"&gt;"
+	},
+	{ 
+		"input": "<SCRIPT FOR=document EVENT=onreadystatechange>javascript:alert(1)</SCRIPT>",
+		"expected": ""
+	},
+	{ 
+		"input": "<b <script>alert(1)</script>0",
+		"expected":"<b>alert(1)0</b>"
+	},
+	{ 
+		"input": "<? foo=\"><x foo='?><script>javascript:alert(1)</script>'>\">",
+		"expected":"&gt;"
+	},
+	{ 
+		"input": "<div id=d><x xmlns=\"><iframe onload=javascript:alert(1)\"></div> <script>d.innerHTML=d.innerHTML</script>",
+		"expected":"<div id=\"d\"></div>"
+	},
+	{ 
+		"input": "<!--[if]><script>javascript:alert(1)</script -->",
+		"expected": ""
+	},
+	{ 
+		"input": "<script src=\"/\\%(jscript)s\"></script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script>({set/**/$($){\\_/**/setter=$,_=javascript:alert(1)}}).$=eval</script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script>({0:#0=eval/#0#/#0#(javascript:alert(1))})</script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script>ReferenceError.prototype.**defineGetter**('name', function(){javascript:alert(1)}),x</script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script>Object.**noSuchMethod** = Function,[{}][0].constructor.\\_('javascript:alert(1)')()</script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script>%(payload)s</script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script src=%(jscript)s></script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script language='javascript' src='%(jscript)s'></script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script>javascript:alert(1)</script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<SCRIPT SRC=\"%(jpg)s\"></SCRIPT>",
+		"expected": ""
+	},
+	{ 
+		"input": "<SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT>",
+		"expected": ""
+	},
+	{ 
+		"input": "<SCRIPT SRC=http://ha.ckers.org/xss.js?< B >",
+		"expected": ""
+	},
+	{ 
+		"input": "<SCRIPT SRC=//ha.ckers.org/.j>",
+		"expected": ""
+	},
+	{ 
+		"input": "<!--#exec cmd=\"/bin/echo '<SCR--><!--#exec cmd=\"/bin/echo 'IPT SRC=http://ha.ckers.org/xss.js></SCRIPT>-->",
+		"expected": ""
+	},
+	{ 
+		"input": "<? echo('<SCR)';echo('IPT>alert(\"XSS\")</SCRIPT>'); ?>",
+		"expected":"alert(\"XSS\")'); ?&gt;"
+	},
+	{ 
+		"input": "<META HTTP-EQUIV=\"Set-Cookie\" Content=\"USERID=<SCRIPT>alert('XSS')</SCRIPT>\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<script/&Tab; src='https://dl.dropbox.com/u/13018058/js.js' /&Tab;></script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<script>for((i)in(self))eval(i)(1)</script>",
+		"expected": ""
+	},
+	{ 
+		"input": "<image/src/onerror=prompt(8)>",
+		"expected":"<img src=\"\">"
+	},
+	{ 
+		"input": "<IMG onmouseover=\"alert('xxs')\">",
+		"expected":"<img>"
+	},
+	{ 
+		"input": "><img src=xxx:x \\x0Bonerror=javascript:alert(1)> ,",
+		"expected":"&gt;<img>"
+	},
+	{ 
+		"input": "<style></style\\x3E<img src=\"about:blank\" onerror=javascript:alert(1)//></style>",
+		"expected": ""
+	},
+	{ 
+		"input": "<!--\\x3E<img src=xxx:x onerror=javascript:alert(1)> -->",
+		"expected": ""
+	},
+	{ 
+		"input": "<image src =q onerror=prompt(8)>",
+		"expected":"<img src=\"q\">"
+	},
+	{ 
+		"input": "<IMG SRC=x onsearch=\"alert(String.fromCharCode(88,83,83))\">",
+		"expected":"<img src=\"x\">"
+	},
+	{ 
+		"input": "<IMG SRC=x onload=\"alert(String.fromCharCode(88,83,83))\">",
+		"expected":"<img src=\"x\">"
+	},
+	{ 
+		"input": "<IMG LOWSRC=\"javascript:alert('XSS')\">",
+		"expected":"<img>"
+	},
+	{ 
+		"input": "><img src=x onerror=window.open('https://www.google.com/');>",
+		"expected":"&gt;<img src=\"x\">"
+	},
+	{ 
+		"input": "<IMG STYLE=\"xss:expr/*XSS*/ession(javascript:alert(1))\">",
+		"expected":"<img style=\"xss:expr/*XSS*/ession(javascript:alert(1))\">"
+	},
+	{ 
+		"input": "<STYLE>.XSS{background-image:url(\"javascript:alert('XSS')\");}</STYLE><A CLASS=XSS></A>",
+		"expected":"<a class=\"XSS\"></a>"
+	},
+	{ 
+		"input": "<svg><style>{font-family&colon;'<iframe/onload=confirm(1)>'",
+		"expected":"<svg><style>{font-family:'</style></svg>"
+	},
+	{ 
+		"input": "<STYLE>BODY{-moz-binding:url(\"http://ha.ckers.org/xssmoz.xml#xss\")}</STYLE>",
+		"expected": ""
+	},
+	{ 
+		"input": "<STYLE>@import'http://ha.ckers.org/xss.css';</STYLE>",
+		"expected": ""
+	},
+	{ 
+		"input": "<style onLoad style onLoad=\"javascript:javascript:alert(1)\"></style onLoad>",
+		"expected": ""
+	},
+	{ 
+		"input": "<style onReadyStateChange style onReadyStateChange=\"javascript:javascript:alert(1)\"></style onReadyStateChange>",
+		"expected": ""
+	},
+	{ 
+		"input": "<style>p[foo=bar{}*{-o-link:'javascript:javascript:alert(1)'}{}*{-o-link-source:current}]{color:red};</style>",
+		"expected": ""
+	},
+	{ 
+		"input": "<style>@import \"data:,\\*%7bx:expression(javascript:alert(1))%7D\";</style>",
+		"expected": ""
+	},
+	{ 
+		"input": "<style>\\*[{}@import'%(css)s?]</style>X",
+		"expected":"X"
+	},
+	{ 
+		"input": "</font>/<svg><style>{src&#x3A;'<style/onload=this.onload=confirm(1)>'</font>/</style>",
+		"expected":"/<svg><style>{src:'<style>'/</style></style></svg>"
+	},
+	{ 
+		"input": "<style>BODY{-moz-binding:url(\"http://www.securitycompass.com/xssmoz.xml#xss\")}</style>",
+		"expected": ""
+	},
+	{ 
+		"input": "<STYLE>li {list-style-image: url(\"javascript:javascript:alert(1)\");}</STYLE><UL><LI>XSS",
+		"expected":"<ul><li>XSS</li></ul>"
+	},
+	{ 
+		"input": "<iframe/src=\"data:text/html,<svg &#111;&#110;load=alert(1)>\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<a href=\"data:text/html;base64_,<svg/onload=\u0061&#x6C;&#101%72t(1)>\">X</a",
+		"expected":"<a>X</a>"
+	},
+	{ 
+		"input": "<svg onResize svg onResize=\"javascript:javascript:alert(1)\"></svg onResize>",
+		"expected":"<svg></svg>"
+	},
+	{ 
+		"input": "onclick=prompt(8)><svg/onload=prompt(8)>\"@x.y",
+		"expected":"onclick=prompt(8)&gt;<svg>\"@x.y</svg>"
+	},
+	{ 
+		"input": "<body onload=\"document.vulnerable=true;\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<HTML><BODY><?xml:namespace prefix=\"t\" ns=\"urn:schemas-microsoft-com:time\"><?import namespace=\"t\" implementation=\"#default#time2\"><t:set attributeName=\"innerHTML\" to=\"XSS&lt;SCRIPT DEFER&gt;javascript:alert(1)&lt;/SCRIPT&gt;\"></BODY></HTML>",
+		"expected": ""
+	},
+	{ 
+		"input": "<body/onload=&lt;!--&gt;&#10alert(1)>",
+		"expected": ""
+	},
+	{ 
+		"input": "<body onscroll=javascript:alert(1)><br><br><br><br><br><br>...<br><br><br><br><br><br><br><br><br><br>...<br><br><br><br><br><br><br><br><br><br>...<br><br><br><br><br><br><br><br><br><br>...<br><br><br><br><br><br><br><br><br><br>...<br><br><br><br><\"input\" autofocus>",
+		"expected":"<br><br><br><br><br><br>...<br><br><br><br><br><br><br><br><br><br>...<br><br><br><br><br><br><br><br><br><br>...<br><br><br><br><br><br><br><br><br><br>...<br><br><br><br><br><br><br><br><br><br>...<br><br><br><br><\"input\">"
+	},
+	{ 
+		"input": "<body onPropertyChange body onPropertyChange=\"javascript:javascript:alert(1)\"></body onPropertyChange>",
+		"expected": ""
+	},
+	{ 
+		"input": "<body onFocus body onFocus=\"javascript:javascript:alert(1)\"></body onFocus>",
+		"expected": ""
+	},
+	{ 
+		"input": "<body onFocus body onFocus=\"javascript:javascript:alert(1)\"></body onFocus>",
+		"expected": ""
+	},
+	{ 
+		"input": "<body onMouseEnter body onMouseEnter=\"javascript:javascript:alert(1)\"></body onMouseEnter>",
+		"expected": ""
+	},
+	{ 
+		"input": "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><foo><![CDATA[<]]>SCRIPT<![CDATA[>]]>alert('gotcha');<![CDATA[<]]>/SCRIPT<![CDATA[>]]></foo>",
+		"expected":"SCRIPT]]&gt;alert('gotcha');/SCRIPT]]&gt;"
+	},
+	{ 
+		"input": "<xml onPropertyChange xml onPropertyChange=\"javascript:javascript:alert(1)\"></xml onPropertyChange>",
+		"expected": ""
+	},
+	{ 
+		"input": "<xml id=\"xss\" src=\"%(htc)s\"></xml> <label dataformatas=\"html\" datasrc=\"#xss\" datafld=\"payload\"></label>",
+		"expected":" <label></label>"
+	},
+	{ 
+		"input": "<HTML xmlns:xss><?import namespace=\"xss\" implementation=\"%(htc)s\"><xss:xss>XSS</xss:xss></HTML>\"\"\",\"XML namespace.\"),(\"\"\"<XML ID=\"xss\"><I><B>&lt;IMG SRC=\"javas<!-- -->cript:javascript:alert(1)\"&gt;</B></I></XML><SPAN DATASRC=\"#xss\" DATAFLD=\"B\" DATAFORMATAS=\"HTML\"></SPAN>",
+		"expected":"XSS\"\"\",\"XML namespace.\"),(\"\"\"<i><b>&lt;IMG SRC=\"javascript:javascript:alert(1)\"&gt;</b></i><span></span>"
+	},
+	{ 
+		"input": "<xml onPropertyChange xml onPropertyChange=\"javascript:javascript:alert(1)\"></xml onPropertyChange>",
+		"expected": ""
+	},
+	{ 
+		"input": "<xml id=\"xss\" src=\"%(htc)s\"></xml> <label dataformatas=\"html\" datasrc=\"#xss\" datafld=\"payload\"></label>",
+		"expected":" <label></label>"
+	},
+	{ 
+		"input": "<div id=\"x\">x</div> <xml:namespace prefix=\"t\"> <import namespace=\"t\" implementation=\"#default#time2\"> <t:set attributeName=\"innerHTML\" targetElement=\"x\" to=\"&lt;img&#11;src=x:x&#11;onerror&#11;=javascript:alert(1)&gt;\">",
+		"expected":"<div id=\"x\">x</div>"
+	},
+	{ 
+		"input": "<HTML xmlns:xss><?import namespace=\"xss\" implementation=\"%(htc)s\"><xss:xss>XSS</xss:xss></HTML>\"\"\",\"XML namespace.\"),(\"\"\"<XML ID=\"xss\"><I><B>&lt;IMG SRC=\"javas<!-- -->cript:javascript:alert(1)\"&gt;</B></I></XML><SPAN DATASRC=\"#xss\" DATAFLD=\"B\" DATAFORMATAS=\"HTML\"></SPAN>",
+		"expected":"XSS\"\"\",\"XML namespace.\"),(\"\"\"<i><b>&lt;IMG SRC=\"javascript:javascript:alert(1)\"&gt;</b></i><span></span>"
+	},
+	{ 
+		"input": "<xml src=\"javascript:document.vulnerable=true;\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<frameset onFocus frameset onFocus=\"javascript:javascript:alert(1)\"></frameset onFocus>",
+		"expected": ""
+	},
+	{ 
+		"input": "<frameset onload=javascript:javascript:alert(1)></frameset>",
+		"expected": ""
+	},
+	{ 
+		"input": "<FRAMESET><FRAME SRC=\"javascript:alert('XSS');\"></FRAMESET>",
+		"expected": ""
+	},
+	{ 
+		"input": "<frameset onload=javascript:alert(1)>",
+		"expected": ""
+	},
+	{ 
+		"input": "<FRAMESET><FRAME SRC=\"javascript:javascript:alert(1);\"></FRAMESET>",
+		"expected": ""
+	},
+	{ 
+		"input": "<FRAMESET><FRAME SRC=\"javascript:document.vulnerable=true;\"></frameset>",
+		"expected": ""
+	},
+	{ 
+		"input": "<audio src=1 href=1 onerror=\"javascript:alert(1)\"></audio>",
+		"expected":"<audio href=\"1\" src=\"1\"></audio>"
+	},
+	{ 
+		"input": "<audio src=1 onerror=alert(1)>",
+		"expected":"<audio src=\"1\"></audio>"
+	},
+	{ 
+		"input": "<video src=1 href=1 onerror=\"javascript:alert(1)\"></video>",
+		"expected":"<video href=\"1\" src=\"1\"></video>"
+	},
+	{ 
+		"input": "<video><source onerror=\"javascript:javascript:alert(1)\">",
+		"expected":"<video><source></video>"
+	},
+	{ 
+		"input": "<video onerror=\"javascript:javascript:alert(1)\"><source>",
+		"expected":"<video><source></video>"
+	},
+	{ 
+		"input": "<video/poster/onerror=alert()>",
+		"expected":"<video poster=\"\"></video>"
+	},
+	{ 
+		"input": "0\"autofocus/onfocus=alert(1)--><video/poster/ error=prompt(2)>\"-confirm(3)-",
+		"expected":"0\"autofocus/onfocus=alert(1)--&gt;<video poster=\"\">\"-confirm(3)-\"</video>"
+	},
+	{ 
+		"input": "<applet onError applet onError=\"javascript:javascript:alert(1)\"></applet onError>",
+		"expected": ""
+	},
+	{ 
+		"input": "<applet onReadyStateChange applet onReadyStateChange=\"javascript:javascript:alert(1)\"></applet onReadyStateChange>",
+		"expected": ""
+	},
+	{ 
+		"input": "<a href=\"javascript\\x3Ajavascript:alert(1)\" id=\"fuzzelement1\">test</a>",
+		"expected":"<a id=\"fuzzelement1\" href=\"javascript\\x3Ajavascript:alert(1)\">test</a>"
+	},
+	{ 
+		"input": "<a style=\"pointer-events:none;position:absolute;\"><a style=\"position:absolute;\" onclick=\"javascript:alert(1);\">XXX</a></a><a href=\"javascript:javascript:alert(1)\">XXX</a>",
+		"expected":"<a style=\"pointer-events:none;position:absolute;\"></a><a style=\"position:absolute;\">XXX</a><a>XXX</a>"
+	},
+	{ 
+		"input": "1<animate/xmlns=urn:schemas-microsoft-com:time style=behavior:url(#default#time2) attributename=innerhtml values=&lt;img/src=&quot;.&quot;onerror=javascript:alert(1)&gt;>",
+		"expected":"1"
+	},
+	{ 
+		"input": "1<a href=#><line xmlns=urn:schemas-microsoft-com:vml style=behavior:url(#default#vml);position:absolute href=javascript:javascript:alert(1) strokecolor=white strokeweight=1000px from=0 to=1000 /></a>",
+		"expected":"1<a href=\"#\"></a>"
+	},
+	{ 
+		"input": "<a style=\"behavior:url(#default#AnchorClick);\" folder=\"javascript:javascript:alert(1)\">XXX</a>",
+		"expected":"<a style=\"behavior:url(#default#AnchorClick);\">XXX</a>"
+	},
+	{ 
+		"input": "<a onmouseover=\"alert(document.cookie)\">xxs link</a>",
+		"expected":"<a>xxs link</a>"
+	},
+	{ 
+		"input": "exp/_<A STYLE='no\\xss:noxss(\"_//*\");xss:ex/*XSS*//*/_/pression(alert(\"XSS\"))'>",
+		"expected":"exp/_<a style=\"no\\xss:noxss(&quot;_//*&quot;);xss:ex/*XSS*//*/_/pression(alert(&quot;XSS&quot;))\">'</a>"
+	},
+	{ 
+		"input": "<A HREF=\"http://66.102.7.147/\">XSS</A>",
+		"expected":"<a href=\"http://66.102.7.147/\">XSS</a>"
+	},
+	{ 
+		"input": "<form><a href=\"javascript:\u0061lert&#x28;1&#x29;\">X",
+		"expected":"<form><a>X</a></form>"
+	},
+	{ 
+		"input": "<a href=javascript&colon;alert&lpar;document&period;cookie&rpar;>Click Here</a>",
+		"expected":"<a>Click Here</a>"
+	},
+	{ 
+		"input": "<math><a xlink:href=\"//jsfiddle.net/t846h/\">click",
+		"expected":"<math></math>"
+	},
+	{ 
+		"input": "<form><a href=\"javascript:\u0061lert&#x28;1&#x29;\">X",
+		"expected":"<form><a>X</a></form>"
+	},
+	{ 
+		"input": "<a&#32;href&#61;&#91;&#00;&#93;\"&#00; onmouseover=prompt&#40;1&#41;&#47;&#47;\">XYZ</a",
+		"expected":"XYZ"
+	},
+	{ 
+		"input": "<math><a xlink:href=\"//jsfiddle.net/t846h/\">click",
+		"expected":"<math></math>"
+	},
+	{ 
+		"input": "<a onmouseover=alert(document.cookie)>xxs link</a>",
+		"expected":"<a>xxs link</a>"
+	},
+	{ 
+		"input": "<a href=javascript&colon;alert&lpar;document&period;cookie&rpar;>Click Here</a>",
+		"expected":"<a>Click Here</a>"
+	},
+	{ 
+		"input": "<math><a xlink:href=\"//jsfiddle.net/t846h/\">click",
+		"expected":"<math></math>"
+	},
+	{ 
+		"input": "<math><a xlink:href=\"//jsfiddle.net/t846h/\">click",
+		"expected":"<math></math>"
+	},
+	{ 
+		"input": "1<animate/xmlns=urn:schemas-microsoft-com:time style=behavior:url(#default#time2) attributename=innerhtml values=&lt;img/src=&quot;.&quot;onerror=javascript:alert(1)&gt;>",
+		"expected":"1"
+	},
+	{ 
+		"input": "<math><a xlink:href=\"//jsfiddle.net/t846h/\">click",
+		"expected":"<math></math>"
+	},
+	{ 
+		"input": "<a href=\"javascript#document.vulnerable=true;\">",
+		"expected":"<a href=\"javascript#document.vulnerable=true;\"></a>"
+	},
+	{ 
+		"input": "<form id=test onform\"input\"=javascript:alert(1)><\"input\"></form><button form=test onformchange=javascript:alert(1)>X",
+		"expected":"<form id=\"test\"><\"input\"></form><button>X</button>"
+	},
+	{ 
+		"input": "<form><button formaction=\"javascript:javascript:alert(1)\">X",
+		"expected":"<form><button>X</button></form>"
+	},
+	{ 
+		"input": "<form><isindex formaction=\"javascript&colon;confirm(1)",
+		"expected":"<form></form>"
+	},
+	{ 
+		"input": "<form><textarea &#13; onkeyup='\u0061\u006C\u0065\u0072\u0074&#x28;1&#x29;'>",
+		"expected":"<form><textarea></textarea></form>"
+	},
+	{ 
+		"input": "//<form/action=javascript&#x3A;alert&lpar;document&period;cookie&rpar;><\"input\"/type='submit'>//",
+		"expected":"//<form><\"input\" type=\"submit\">//</form>"
+	},
+	{ 
+		"input": "&#00;</form><\"input\" type&#61;\"date\" onfocus=\"alert(1)\">",
+		"expected":"�<\"input\">"
+	},
+	{ 
+		"input": "<form><button formaction=\"javascript:alert(XSS)\">lol",
+		"expected":"<form><button>lol</button></form>"
+	},
+	{ 
+		"input": "<form><isindex formaction=\"javascript&colon;confirm(1)",
+		"expected":"<form></form>"
+	},
+	{ 
+		"input": "<form><textarea &#13; onkeyup='\u0061\u006C\u0065\u0072\u0074&#x28;1&#x29;'>",
+		"expected":"<form><textarea></textarea></form>"
+	},
+	{ 
+		"input": "<form><iframe &#09;&#10;&#11; src=\"javascript&#58;alert(1)\"&#11;&#10;&#09;;>",
+		"expected":"<form></form>"
+	},
+	{ 
+		"input": "&#00;</form><\"input\" type&#61;\"date\" onfocus=\"alert(1)\">",
+		"expected":"�<\"input\">"
+	},
+	{ 
+		"input": "<form><button formaction=javascript&colon;alert(1)>CLICKME",
+		"expected":"<form><button>CLICKME</button></form>"
+	},
+	{ 
+		"input": "<table background=\"javascript:javascript:alert(1)\">",
+		"expected":"<table></table>"
+	},
+	{ 
+		"input": "<table><TD BACKGROUND=\"javascript:document.vulnerable=true;\">",
+		"expected":"<table><tbody><tr><td></td></tr></tbody></table>"
+	},
+	{ 
+		"input": "<object src=1 href=1 onerror=\"javascript:alert(1)\"></object>",
+		"expected": ""
+	},
+	{ 
+		"input": "<object onError object onError=\"javascript:javascript:alert(1)\"></object onError>",
+		"expected": ""
+	},
+	{ 
+		"input": "<OBJECT CLASSID=\"clsid:333C7BC4-460F-11D0-BC04-0080C7055A83\"><PARAM NAME=\"DataURL\" VALUE=\"javascript:alert(1)\"></OBJECT>",
+		"expected": ""
+	},
+	{ 
+		"input": "<object onbeforeload object onbeforeload=\"javascript:javascript:alert(1)\"></object onbeforeload>",
+		"expected": ""
+	},
+	{ 
+		"input": "<object data=data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+></object>",
+		"expected": ""
+	},
+	{ 
+		"input": "<OBJECT TYPE=\"text/x-scriptlet\" DATA=\"http://hacker.com/xss.html\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<title onPropertyChange title onPropertyChange=\"javascript:javascript:alert(1)\"></title onPropertyChange>",
+		"expected": ""
+	},
+	{ 
+		"input": "<HTML xmlns:xss><?import namespace=\"xss\" implementation=\"http://www.securitycompass.com/xss.htc\"><xss:xss>XSS</xss:xss></html>",
+		"expected":"XSS"
+	},
+	{ 
+		"input": "<html onMouseUp html onMouseUp=\"javascript:javascript:alert(1)\"></html onMouseUp>",
+		"expected": ""
+	},
+	{ 
+		"input": "<?xml version=\"1.0\"?><html:html xmlns:html='http://www.w3.org/1999/xhtml'><html:script>javascript:alert(1);</html:script></html:html>",
+		"expected":"javascript:alert(1);"
+	},
+	{ 
+		"input": "<marquee onScroll marquee onScroll=\"javascript:javascript:alert(1)\"></marquee onScroll>",
+		"expected":"<marquee></marquee>"
+	},
+	{ 
+		"input": "<marquee onstart='javascript:alert&#x28;1&#x29;'>^**^",
+		"expected":"<marquee>^\\**^</marquee>"
+	},
+	{ 
+		"input": ">><marquee><h1>XSS</h1></marquee>",
+		"expected":"&gt;&gt;<marquee><h1>XSS</h1></marquee>"
+	},
+	{ 
+		"input": "<iframe src=\"javascript:alert('XSS by \nxss');\"></iframe><marquee><h1>XSS by xss</h1></marquee>",
+		"expected":"<marquee><h1>XSS by xss</h1></marquee>"
+	},
+	{ 
+		"input": "<marquee onstart='javascript:alert('1');'>=(◕*◕)=",
+		"expected":"<marquee>=(◕*◕)=</marquee>"
+	},
+	{ 
+		"input": "<iframe onLoad iframe onLoad=\"javascript:javascript:alert(1)\"></iframe onLoad>",
+		"expected": ""
+	},
+	{ 
+		"input": "<iframe onReadyStateChange iframe onReadyStateChange=\"javascript:javascript:alert(1)\"></iframe onReadyStateChange>",
+		"expected": ""
+	},
+	{ 
+		"input": "<iframe src iframe src=\"javascript:javascript:alert(1)\"></iframe src>",
+		"expected": ""
+	},
+	{ 
+		"input": "<iframe style=\"position:absolute;top:0;left:0;width:100%;height:100%\" onmouseover=\"prompt(1)\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<\"input\" value=<><iframe/src=javascript:confirm(1)",
+		"expected":"<\"input\" value=\"<\">"
+	},
+	{ 
+		"input": "<iframe src=j&Tab;a&Tab;v&Tab;a&Tab;s&Tab;c&Tab;r&Tab;i&Tab;p&Tab;t&Tab;:a&Tab;l&Tab;e&Tab;r&Tab;t&Tab;%28&Tab;1&Tab;%29></iframe>",
+		"expected": ""
+	},
+	{ 
+		"input": "<iframe/onreadystatechange=\u0061\u006C\u0065\u0072\u0074('\u0061') worksinIE>",
+		"expected": ""
+	},
+	{ 
+		"input": "><h1><IFRAME SRC=# onmouseover=\"alert(document.cookie)\"></IFRAME>123</h1>",
+		"expected":"&gt;<h1>123</h1>"
+	},
+	{ 
+		"input": "><h1><IFRAME width=\"420\" height=\"315\" SRC=\"http://www.youtube.com/embed/sxvccpasgTE\" frameborder=\"0\" onmouseover=\"alert(document.cookie)\"></IFRAME>123</h1>",
+		"expected":"&gt;<h1>123</h1>"
+	},
+	{ 
+		"input": "<iframe src=\"vbscript:document.vulnerable=true;\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<bgsound onPropertyChange bgsound onPropertyChange=\"javascript:javascript:alert(1)\"></bgsound onPropertyChange>",
+		"expected": ""
+	},
+	{ 
+		"input": "<math href=\"javascript:javascript:alert(1)\">CLICKME</math> <math> <maction actiontype=\"statusline#http://google.com\" xlink:href=\"javascript:javascript:alert(1)\">CLICKME</maction> </math>",
+		"expected":"<math>CLICKME</math> <math> CLICKME </math>"
+	},
+	{ 
+		"input": "<embed src=\"data:text/html;base64,%(base64)s\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<x style=\"background:url('x&#1;;color:red;/*')\">XXX</x>",
+		"expected":"XXX"
+	},
+	{ 
+		"input": "<meta charset=\"x-imap4-modified-utf7\">&ADz&AGn&AG0&AEf&ACA&AHM&AHI&AGO&AD0&AGn&ACA&AG8Abg&AGUAcgByAG8AcgA9AGEAbABlAHIAdAAoADEAKQ&ACAAPABi",
+		"expected":"&amp;ADz&amp;AGn&amp;AG0&amp;AEf&amp;ACA&amp;AHM&amp;AHI&amp;AGO&amp;AD0&amp;AGn&amp;ACA&amp;AG8Abg&amp;AGUAcgByAG8AcgA9AGEAbABlAHIAdAAoADEAKQ&amp;ACAAPABi"
+	},
+	{ 
+		"input": "<vmlframe xmlns=urn:schemas-microsoft-com:vml style=behavior:url(#default#vml);position:absolute;width:100%;height:100% src=%(vml)s#xss></vmlframe>",
+		"expected": ""
+	},
+	{ 
+		"input": "<event-source src=\"%(event)s\" onload=\"javascript:alert(1)\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<BR SIZE=\"&{javascript:alert(1)}\">",
+		"expected":"<br size=\"&amp;{javascript:alert(1)}\">"
+	},
+	{ 
+		"input": "<LAYER SRC=\"%(scriptlet)s\"></LAYER>",
+		"expected": ""
+	},
+	{ 
+		"input": "<LINK REL=\"stylesheet\" HREF=\"javascript:javascript:alert(1);\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<BASE HREF=\"javascript:javascript:alert(1);//\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<embed code=javascript:javascript:alert(1);></embed>",
+		"expected": ""
+	},
+	{ 
+		"input": "</plaintext\\></|\\><plaintext/onmouseover=prompt(1)",
+		"expected": ""
+	},
+	{ 
+		"input": "<var onmouseover=\"prompt(1)\">On Mouse Over</var>",
+		"expected":"<var>On Mouse Over</var>"
+	},
+	{ 
+		"input": "<var onmouseover=\"prompt(1)\">On Mouse Over</var>",
+		"expected":"<var>On Mouse Over</var>"
+	},
+	{ 
+		"input": "<isindex/autofocus/onfocus=alert()>",
+		"expected": ""
+	},
+	{ 
+		"input": "[<blockquote cite=\"]\">[\" onmouseover=\"alert('RVRSH3LL_XSS');\" ]",
+		"expected":"[<blockquote cite=\"]\">[\" onmouseover=\"alert('RVRSH3LL_XSS');\" ]</blockquote>"
+	},
+	{ 
+		"input": "<w contenteditable id=x onfocus=alert()>",
+		"expected": ""
+	},
+	{ 
+		"input": "<math href=\"javascript:javascript:alert(1)\">CLICKME</math> <math> <maction actiontype=\"statusline#http://google.com\" xlink:href=\"javascript:javascript:alert(1)\">CLICKME</maction> </math>",
+		"expected":"<math>CLICKME</math> <math> CLICKME </math>"
+	},
+	{ 
+		"input": "1<set/xmlns=\"urn:schemas-microsoft-com:time\" style=\"beh&#x41vior:url(#default#time2)\" attributename=\"innerhtml\" to=\"&lt;img/src=&quot;x&quot;onerror=javascript:alert(1)&gt;\">",
+		"expected":"1"
+	},
+	{ 
+		"input": "<vmlframe xmlns=urn:schemas-microsoft-com:vml style=behavior:url(#default#vml);position:absolute;width:100%;height:100% src=%(vml)s#xss></vmlframe>",
+		"expected": ""
+	},
+	{ 
+		"input": "perl -e 'print \"<IMG SRC=java\\0script:alert(\"XSS\")>\";' > out",
+		"expected":"perl -e 'print \"<img src=\"java\\0script:alert(\\&quot;XSS\\&quot;)\">\";' &gt; out"
+	},
+	{ 
+		"input": "<TD BACKGROUND=\"javascript:alert('XSS')\">",
+		"expected": ""
+	},
+	{ 
+		"input": "<LAYER SRC=\"javascript:document.vulnerable=true;\"></LAYER>",
+		"expected": ""
+	},
+	{ 
+		"input": "<~/XSS STYLE=xss:expression(alert('XSS'))>",
+		"expected":"&lt;~/XSS STYLE=xss:expression(alert('XSS'))&gt;"
+	},
+	{ 
+		"input": "<;META HTTP-EQUIV=\";refresh\"; CONTENT=\";0;url=javascript:alert(';XSS';);\";>;",
+		"expected":"&lt;;META HTTP-EQUIV=\";refresh\"; CONTENT=\";0;url=javascript:alert(';XSS';);\";&gt;;"
+	},
+	{ 
+		"input": "<;IMG SRC=\";mocha:[code]\";>;",
+		"expected":"&lt;;IMG SRC=\";mocha:[code]\";&gt;;"
+	},
+	{ 
+		"input": "<;OBJECT classid=clsid:ae24fdae-03c6-11d1-8b76-0080c744f389>;<;param name=url value=javascript:alert(';XSS';)>;<;/OBJECT>;",
+		"expected":"&lt;;OBJECT classid=clsid:ae24fdae-03c6-11d1-8b76-0080c744f389&gt;;&lt;;param name=url value=javascript:alert(';XSS';)&gt;;&lt;;/OBJECT&gt;;"
+	},
+	{ 
+		"input": "<;EMBED SRC=\";http://ha.ckers.org/xss.swf\"; AllowScriptAccess=\";always\";>;<;/EMBED>;",
+		"expected":"&lt;;EMBED SRC=\";http://ha.ckers.org/xss.swf\"; AllowScriptAccess=\";always\";&gt;;&lt;;/EMBED&gt;;"
+	},
+	{ 
+		"input": "<;STYLE TYPE=\";text/javascript\";>;alert(';XSS';);<;/STYLE>;",
+		"expected":"&lt;;STYLE TYPE=\";text/javascript\";&gt;;alert(';XSS';);&lt;;/STYLE&gt;;"
+	},
+	{ 
+		"input": "<;LINK REL=\";stylesheet\"; HREF=\";http://ha.ckers.org/xss.css\";>;",
+		"expected":"&lt;;LINK REL=\";stylesheet\"; HREF=\";http://ha.ckers.org/xss.css\";&gt;;"
+	},
+	{ 
+		"input": "<;HTML xmlns:xss>;",
+		"expected":"&lt;;HTML xmlns:xss&gt;;"
+	},
+	{ 
+		"input": "perl -e ';print \";&;<;SCR\\0IPT>;alert(\";XSS\";)<;\/SCR\\0IPT>;\";;\\'; >; out",
+		"expected":"perl -e 'print \"alert(\"XSS\")\";' &gt; out"
+	},
+	{ 
+		"input": "<;A HREF=\";http://www.gohttp://www.google.com/ogle.com/\";>;XSS<;/A>;",
+		"expected":"&lt;;A HREF=\";http://www.gohttp://www.google.com/ogle.com/\";&gt;;XSS&lt;;/A&gt;;"
+	},
+	{ 
+		"input": "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><!DOCTYPE foo [<!ELEMENT foo ANY><!ENTITY xxe SYSTEM \"file:///dev/random\">]><foo>&xee;</foo>",
+		"expected":"]&gt;&amp;xee;"
+	},
+	{ 
+		"input": "<INPUT TYPE=\"IMAGE\" SRC=\"javascript:alert('XSS');\">",
+		"expected":"<\"input\" type=\"IMAGE\">"
 	}
+
 ]
