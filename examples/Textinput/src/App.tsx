@@ -1,21 +1,28 @@
 import { useState } from 'react';
 import './App.css';
 import { TextInput } from 'protecjs';
-import {validation}  from 'protecjs'; // <--- Import the validator function
+import { validation } from 'protecjs'; // Import the validation function
 
 function App() {
   const [text, setText] = useState('');
-  const [isValid, setIsValid] = useState(true); // Add a state to track validation result
+  const [isValid, setIsValid] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleInputChange = (input: string) => {
+  const handleChange = (input: string) => {
+    try {
+      validation(input); // Call the validation function
+      setIsValid(true);
+      setErrorMessage('');
+    } catch (error : any) {
+      setIsValid(false);
+      setErrorMessage(error.message);
+    }
     setText(input);
-    const validationResult = validation(input);
-    setIsValid(validationResult === undefined); // Set isValid to true if no error is thrown
   };
 
   return (
     <div>
-      <TextInput value={text} onChange={handleInputChange}
+      <TextInput value={text} onChange={handleChange}
         dompurify={{
           ALLOWED_TAGS: ['i', 'em', 'strong', 'a'],
           ALLOWED_ATTR: ['href'],
@@ -25,12 +32,12 @@ function App() {
       />
       <p>Sanitized Text: {text}</p>
       {isValid ? (
-        <p>Input is valid!</p>
+        <p>Input is valid</p>
       ) : (
-        <p style={{ color: 'red' }}>Input is not valid!</p>
+        <p style={{ color: 'red' }}>{errorMessage}</p>
       )}
     </div>
-  );
+  )
 }
 
 export default App;
