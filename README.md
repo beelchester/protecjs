@@ -23,7 +23,7 @@ yarn dev
 The TextInput component is a controlled input field designed for React applications. It integrates with DOMPurify to sanitize user input, ensuring that potentially harmful content is removed before being processed or displayed. This component helps in preventing Cross-Site Scripting (XSS) attacks by cleaning up the input based on the provided or default sanitization rules.
 ```
 
-Syntax :
+Syntax
 ```bash
 <TextInput
   value={value}
