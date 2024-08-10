@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import './App.css';
-import { TextInput } from 'protecjs';
-import { validation } from 'protecjs'; // Import the validation function
+import { TextInput, validation } from 'protecjs';
 
 function App() {
   const [text, setText] = useState('');
@@ -13,7 +12,7 @@ function App() {
       validation(input); // Call the validation function
       setIsValid(true);
       setErrorMessage('');
-    } catch (error : any) {
+    } catch (error: any) {
       setIsValid(false);
       setErrorMessage(error.message);
     }

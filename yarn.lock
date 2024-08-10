@@ -2488,6 +2488,11 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha512-D9cPgkvLlV3t3IzL0D0YLvGA9Ahk4PcvVwUbN0dSGr1aP0Nrt4AEnTUbuGvquEC0mA64Gqt1fzirlRs5ibXx8g==
 
+sql-query-identifier@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/sql-query-identifier/-/sql-query-identifier-2.7.0.tgz#e05de066df91d93388f5f088245f16c13290022d"
+  integrity sha512-MTDRfn0kUv+9ELnt9wt/FATi03Wq1j3YvhE5Up8ToE5Afk5zzBgVHPuIu1bVhqNqfF0aeIPl3vEzZ60H1yv0ag==
+
 stack-utils@^2.0.3:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/stack-utils/-/stack-utils-2.0.6.tgz#aaf0748169c02fc33c8232abccf933f54a1cc34f"

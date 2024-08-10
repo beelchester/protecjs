@@ -65,7 +65,7 @@ const keywords = [
   "UNKNOWN"
 ];
 
-function extractSQLQueries(input : string) {
+function extractSQLQueries(input: string) {
   const regex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'i');
   const queries = [];
 
@@ -88,7 +88,7 @@ function extractSQLQueries(input : string) {
   return queries;
 }
 
-export function validations(input : string) {
+export default function validation(input: string) {
   const sqlQueries = extractSQLQueries(input);
   if (sqlQueries.length > 0) {
     alert("SQL query detected!");
