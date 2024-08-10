@@ -19,12 +19,12 @@ yarn dev
 
 # Documentation
 
-##TextInput
-```bash
-The TextInput component is a controlled input field designed for React applications. It integrates with DOMPurify to sanitize user input, ensuring that potentially harmful content is removed before being processed or displayed. This component helps in preventing Cross-Site Scripting (XSS) attacks by cleaning up the input based on the provided or default sanitization rules.
-```
+## TextInput
 
-Syntax :
+The TextInput component is a controlled input field designed for React applications. It integrates with DOMPurify to sanitize user input, ensuring that potentially harmful content is removed before being processed or displayed. This component helps in preventing Cross-Site Scripting (XSS) attacks by cleaning up the input based on the provided or default sanitization rules.
+
+
+Syntax
 ```bash
 <TextInput
   value={value}
@@ -34,22 +34,22 @@ Syntax :
 ```
 
 Props
-```bash
--value (string): The current value of the input field. This should be managed by the parent component's state.
 
--onChange ((newValue: string) => void): A callback function that is triggered when the input value changes.
+- value (string): The current value of the input field. This should be managed by the parent component's state.
+
+- onChange ((newValue: string) => void): A callback function that is triggered when the input value changes.
 It receives the new value as a parameter.
 
--dompurify (object | undefined): Optional configuration object for DOMPurify to customize the sanitization behavior.
-```
+- dompurify (object | undefined): Optional configuration object for DOMPurify to customize the sanitization behavior.
+
 
 DOMPurify Configuration
-```bash
+
 The dompurify prop allows you to pass a configuration object to customize the sanitization process. 
 This object can include various settings such as allowed tags, attributes, and forbidden elements.
-```
 
-Configuration Syntax
+
+Configuration Example
 ```bash
 const dompurifyConfig = {
   ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a'], // Tags that are allowed in the input
