@@ -2,6 +2,13 @@ import React, { useState } from 'react';
 import { render, fireEvent, screen, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import TextInput from '../components/TextInput';
+import fs from 'fs';
+import path from 'path';
+
+interface TestCase {
+  input: string;
+  expected: string;
+}
 
 afterEach(cleanup);
 const handleChange = jest.fn();
@@ -33,21 +40,8 @@ test('sanitizes various inputs with DOMPurify', () => {
   render(<Wrapper />);
   const inputElement = screen.getByRole('textbox');
 
-  const testCases = [
-    { input: '<img src=x onerror=alert(1)//>', expected: '<img src="x">' },
-    { input: '<script>alert("XSS")</script>', expected: '' },
-    { input: '<a href="javascript:alert(1)">Click me</a>', expected: '<a>Click me</a>' },
-    { input: '<div onclick="alert(1)">Hello</div>', expected: '<div>Hello</div>' },
-    { input: '<img src="x" onerror="alert(1)" />', expected: '<img src="x">' },
-    { input: '<img src=x onerror=alert(1)//>', expected: '<img src="x">' },
-    { input: '<p>abc<iframe//src=jAva&Tab;script:alert(3)>def</p>', expected: '<p>abc</p>' },
-    { input: '<math><mi//xlink:href="data:x,<script>alert(4)</script>">', expected: '<math><mi></mi></math>' },
-    { input: '<TABLE><tr><td>HELLO</tr></TABLE>', expected: '<table><tbody><tr><td>HELLO</td></tr></tbody></table>' },
-    { input: '<UL><li><A HREF=//google.com>click</UL>', expected: '<ul><li><a href="//google.com">click</a></li></ul>' },
-    { input: '<svg><script xlink:href="data:application/javascript;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4="></script></svg>', expected: '<svg></svg>' },
-    { input: '<a href=\'javascript:alert(1)\'>Click me</a>', expected: '<a>Click me</a>' },
-    { input: '<input type=\'text\' value=\'\'><img src=\'x\' onerror=\'alert(1)\'>', expected: '<input value="" type="text"><img src="x">' },
-  ];
+  const testCasesPath = path.join(__dirname, 'dompurifyTests.json');
+  const testCases: TestCase[] = JSON.parse(fs.readFileSync(testCasesPath, 'utf8'));
 
   testCases.forEach(({ input, expected }) => {
     fireEvent.change(inputElement, { target: { value: input } });
@@ -76,6 +70,7 @@ test('sanitizes input as per the dompurifyConfig', () => {
   );
   const inputElement = screen.getByRole('textbox');
 
+<<<<<<< HEAD
   const testCases = [
     { input: '<b>Bold</b>', expected: 'Bold' },
     { input: '<i>Italic</i>', expected: 'Italic' },
@@ -90,6 +85,10 @@ test('sanitizes input as per the dompurifyConfig', () => {
     { input: '<a href="http://example.com">Link</a>', expected: '<a href="http://example.com">Link</a>' },
     { input: '<html><body><p>Paragraph</p></body></html>', expected: 'Paragraph' },
   ];
+=======
+  const testCasesPath = path.join(__dirname, 'dompurifyConfigTests.json');
+  const testCases: TestCase[] = JSON.parse(fs.readFileSync(testCasesPath, 'utf8'));
+>>>>>>> upstream/master
 
   testCases.forEach(({ input, expected }) => {
     fireEvent.change(inputElement, { target: { value: input } });
