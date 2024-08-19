@@ -31,7 +31,7 @@ jobs:
       run: yarn test
 
     - name: Run example
-      runCmd: |
+      run: |
           cd examples/Textinput
           yarn install
           yarn build
