@@ -29,3 +29,10 @@ jobs:
 
     - name: Run tests
       run: yarn test
+
+    - name: Run example
+      runCmd: |
+          cd examples/Textinput
+          yarn install
+          yarn build
+          yarn start &
