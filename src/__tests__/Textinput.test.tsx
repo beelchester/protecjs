@@ -70,25 +70,8 @@ test('sanitizes input as per the dompurifyConfig', () => {
   );
   const inputElement = screen.getByRole('textbox');
 
-<<<<<<< HEAD
-  const testCases = [
-    { input: '<b>Bold</b>', expected: 'Bold' },
-    { input: '<i>Italic</i>', expected: 'Italic' },
-    { input: '<em>Emphasis</em>', expected: '<em>Emphasis</em>' },
-    { input: '<strong>Strong</strong>', expected: '<strong>Strong</strong>' },
-    { input: '<a href="http://example.com">Link</a>', expected: '<a href="http://example.com">Link</a>' },
-    { input: '<script>alert("XSS")</script>', expected: '' },
-    { input: '<div>Hello</div>', expected: 'Hello' },
-    { input: '<marquee>Hello world</marquee>', expected: 'Hello world' },
-    { input: '<div aria-label="Test">Content</div>', expected: 'Content' },
-    { input: '<html><body>Hello</body></html>', expected: 'Hello' },
-    { input: '<a href="http://example.com">Link</a>', expected: '<a href="http://example.com">Link</a>' },
-    { input: '<html><body><p>Paragraph</p></body></html>', expected: 'Paragraph' },
-  ];
-=======
   const testCasesPath = path.join(__dirname, 'dompurifyConfigTests.json');
   const testCases: TestCase[] = JSON.parse(fs.readFileSync(testCasesPath, 'utf8'));
->>>>>>> upstream/master
 
   testCases.forEach(({ input, expected }) => {
     fireEvent.change(inputElement, { target: { value: input } });
@@ -96,4 +79,3 @@ test('sanitizes input as per the dompurifyConfig', () => {
     expect(handleChange).toHaveBeenCalledWith(expected);
   });
 });
-
