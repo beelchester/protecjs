@@ -35,4 +35,3 @@ jobs:
           cd examples/Textinput
           yarn install
           yarn build
-          yarn start &
