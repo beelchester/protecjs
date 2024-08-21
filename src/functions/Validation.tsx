@@ -1,4 +1,5 @@
 import { identify } from "sql-query-identifier";
+import Validator from 'validatorjs';
 
 const keywords = [
   "UPDATE",
@@ -90,15 +91,25 @@ function extractSQLQueries(input: string) {
 
 export default function validation(input: string) {
   const sqlQueries = extractSQLQueries(input);
+
   if (sqlQueries.length > 0) {
     alert("SQL query detected!");
+
+    const rules = {
+      query: 'required|string'
+    };
+
     for (const query of sqlQueries) {
       const res = identify(query, { strict: false });
       console.log(res[0].type);
-      if (res[0].type === 'UNKNOWN') {
-        console.log("It is not a SQL query");
-      } else {
+
+      const validation = new Validator({ query }, rules);
+
+      if (validation.fails()) {
+        console.log("Validation errors:", validation.errors.all());
         throw new Error(`SQL query of type ${res[0].type} detected: ${query}`);
+      } else {
+        console.log("SQL query passed validation:", query);
       }
     }
   }
