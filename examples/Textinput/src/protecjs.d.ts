@@ -1,5 +1,5 @@
 declare module 'protecjs' {
-    // Define any types or interfaces based on the module's API
+    
     export interface TextInputProps {
       value: string;
       onChange: (value: string) => void;
