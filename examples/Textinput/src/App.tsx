@@ -36,7 +36,7 @@ function App() {
         <p style={{ color: 'red' }}>{errorMessage}</p>
       )}
     </div>
-  )
+  );
 }
 
 export default App;

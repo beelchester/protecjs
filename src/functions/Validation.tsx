@@ -1,4 +1,10 @@
 import { identify } from "sql-query-identifier";
+import Validator from "validatorjs";
+
+
+const rules = {
+  text: 'required|string'
+};
 
 const keywords = [
   "UPDATE",
@@ -29,37 +35,37 @@ const keywords = [
   "ALTER_FUNCTION",
   "ALTER_INDEX",
   "ALTER_PROCEDURE",
-  "ANON_BLOCK", // BigQuery and Oracle dialects only
-  "SHOW_BINARY", // MySQL and generic dialects only
-  "SHOW_BINLOG", // MySQL and generic dialects only
-  "SHOW_CHARACTER", // MySQL and generic dialects only
-  "SHOW_COLLATION", // MySQL and generic dialects only
-  "SHOW_COLUMNS", // MySQL and generic dialects only
-  "SHOW_CREATE", // MySQL and generic dialects only
-  "SHOW_DATABASES", // MySQL and generic dialects only
-  "SHOW_ENGINE", // MySQL and generic dialects only
-  "SHOW_ENGINES", // MySQL and generic dialects only
-  "SHOW_ERRORS", // MySQL and generic dialects only
-  "SHOW_EVENTS", // MySQL and generic dialects only
-  "SHOW_FUNCTION", // MySQL and generic dialects only
-  "SHOW_GRANTS", // MySQL and generic dialects only
-  "SHOW_INDEX", // MySQL and generic dialects only
-  "SHOW_MASTER", // MySQL and generic dialects only
-  "SHOW_OPEN", // MySQL and generic dialects only
-  "SHOW_PLUGINS", // MySQL and generic dialects only
-  "SHOW_PRIVILEGES", // MySQL and generic dialects only
-  "SHOW_PROCEDURE", // MySQL and generic dialects only
-  "SHOW_PROCESSLIST", // MySQL and generic dialects only
-  "SHOW_PROFILE", // MySQL and generic dialects only
-  "SHOW_PROFILES", // MySQL and generic dialects only
-  "SHOW_RELAYLOG", // MySQL and generic dialects only
-  "SHOW_REPLICAS", // MySQL and generic dialects only
-  "SHOW_SLAVE", // MySQL and generic dialects only
-  "SHOW_REPLICA", // MySQL and generic dialects only
-  "SHOW_STATUS", // MySQL and generic dialects only
-  "SHOW_TABLE", // MySQL and generic dialects only
-  "SHOW_TABLES", // MySQL and generic dialects only
-  "SHOW_TRIGGERS", // MySQL and generic dialects only
+  "ANON_BLOCK",
+  "SHOW_BINARY",
+  "SHOW_BINLOG",
+  "SHOW_CHARACTER",
+  "SHOW_COLLATION",
+  "SHOW_COLUMNS",
+  "SHOW_CREATE",
+  "SHOW_DATABASES",
+  "SHOW_ENGINE",
+  "SHOW_ENGINES",
+  "SHOW_ERRORS",
+  "SHOW_EVENTS",
+  "SHOW_FUNCTION",
+  "SHOW_GRANTS",
+  "SHOW_INDEX",
+  "SHOW_MASTER",
+  "SHOW_OPEN",
+  "SHOW_PLUGINS",
+  "SHOW_PRIVILEGES",
+  "SHOW_PROCEDURE",
+  "SHOW_PROCESSLIST",
+  "SHOW_PROFILE",
+  "SHOW_PROFILES",
+  "SHOW_RELAYLOG",
+  "SHOW_REPLICAS",
+  "SHOW_SLAVE",
+  "SHOW_REPLICA",
+  "SHOW_STATUS",
+  "SHOW_TABLE",
+  "SHOW_TABLES",
+  "SHOW_TRIGGERS",
   "SHOW_VARIABLES",
   "SHOW_WARNINGS",
   "UNKNOWN"
@@ -89,6 +95,14 @@ function extractSQLQueries(input: string) {
 }
 
 export default function validation(input: string) {
+  // Validate input using validatorjs
+  const validation = new Validator({ text: input }, rules);
+
+  if (validation.fails()) {
+    throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
+  }
+
+  // Extract and check SQL queries
   const sqlQueries = extractSQLQueries(input);
   if (sqlQueries.length > 0) {
     alert("SQL query detected!");
