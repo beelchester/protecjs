@@ -4,6 +4,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
+  "module": "dist/index.mjs",
+  "exports":{
+    ".": "./dist/index.js"
+  },
   "dependencies": {
     "@types/dompurify": "^3.0.5",
     "@types/react": "^18.3.3",
@@ -12,7 +16,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sql-query-identifier": "^2.7.0",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "protecjs": "^1.0.0"
   },
   "peerDependencies": {
     "react": "^18.3.1",
