@@ -1,10 +1,12 @@
 import React from 'react';
 import DOMPurify from 'dompurify';
+import DomPurifyConfig from './dompurifyConfig';
 
 interface BaseElementProps {
   tag: keyof JSX.IntrinsicElements;
   value: string;
   onChange: (value: string) => void;
+<<<<<<< HEAD
   dompurify?: {
     ALLOWED_TAGS?: string[];
     ALLOWED_ATTR?: string[];
@@ -17,14 +19,23 @@ interface BaseElementProps {
     KEEP_CONTENT?: boolean;
     RETURN_TRUSTED_TYPE?: boolean;
   };
+=======
+  dompurify?: DomPurifyConfig;
+>>>>>>> upstream/master
   [key: string]: any;
 }
 
 const BaseElement: React.FC<BaseElementProps> = ({ tag: Tag, value, onChange, dompurify, ...props }) => {
   const handleChange = (event: React.ChangeEvent<any>) => {
+<<<<<<< HEAD
     console.log(dompurify)
    
     const sanitizedValue = DOMPurify.sanitize(event.target.value, dompurify || {});
+=======
+    const sanitized = DOMPurify.sanitize(event.target.value, dompurify || {});
+
+    const sanitizedValue = typeof sanitized === 'string' ? sanitized : sanitized.toString();
+>>>>>>> upstream/master
 
     onChange(sanitizedValue);
     
