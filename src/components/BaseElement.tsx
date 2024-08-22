@@ -28,6 +28,7 @@ interface BaseElementProps {
 const BaseElement: React.FC<BaseElementProps> = ({ tag: Tag, value, onChange, dompurify, ...props }) => {
   const handleChange = (event: React.ChangeEvent<any>) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     console.log(dompurify)
    
     const sanitizedValue = DOMPurify.sanitize(event.target.value, dompurify || {});
@@ -37,8 +38,10 @@ const BaseElement: React.FC<BaseElementProps> = ({ tag: Tag, value, onChange, do
     const sanitizedValue = typeof sanitized === 'string' ? sanitized : sanitized.toString();
 >>>>>>> upstream/master
 
+=======
+    const sanitizedValue = DOMPurify.sanitize(event.target.value, dompurify || {});
+>>>>>>> f86fd5072b5f62379e3f5d1e94d152d2ad436a88
     onChange(sanitizedValue);
-    
   };
 
   return <Tag {...props} value={value} onChange={handleChange} />;
