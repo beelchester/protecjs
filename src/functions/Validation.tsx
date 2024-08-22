@@ -95,14 +95,14 @@ function extractSQLQueries(input: string) {
 }
 
 export default function validation(input: string) {
-  // Validate input using validatorjs
+  
   const validation = new Validator({ text: input }, rules);
 
   if (validation.fails()) {
     throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
   }
 
-  // Extract and check SQL queries
+  
   const sqlQueries = extractSQLQueries(input);
   if (sqlQueries.length > 0) {
     alert("SQL query detected!");
