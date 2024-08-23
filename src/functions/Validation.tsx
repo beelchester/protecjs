@@ -68,6 +68,7 @@ const keywords = [
 function extractSQLQueries(input: string) {
   const regex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'i');
   const queries = [];
+
   let currentIndex = 0;
 
   while (currentIndex < input.length) {
@@ -75,7 +76,7 @@ function extractSQLQueries(input: string) {
 
     if (!match) break;
 
-    const keywordIndex = currentIndex + (match.index ?? 0);
+    const keywordIndex = currentIndex + (match.index as number);
     const endIndex = input.indexOf(';', keywordIndex);
 
     if (endIndex === -1) break;
@@ -91,25 +92,15 @@ export default function validation(input: string) {
   const sqlQueries = extractSQLQueries(input);
   if (sqlQueries.length > 0) {
     alert("SQL query detected!");
-  
     for (const query of sqlQueries) {
-      console.log(`Inspecting query: ${query}`);
-  
       const res = identify(query, { strict: false });
-      console.log(`Identify result: ${JSON.stringify(res)}`);
-  
-      for (const result of res) {
-        if (result.type === 'CREATE_VIEW') {
-          console.log(`SQL query of type CREATE_VIEW detected: ${query}`);
-        } else {
-          console.log(`SQL query of type ${result.type} detected: ${query}`);
-        }
+      console.log(res[0].type);
+      if (res[0].type === 'UNKNOWN') {
+        console.log("It is not a SQL query");
+      } else {
+        throw new Error(`SQL query of type ${res[0].type} detected: ${input}`);
+
       }
     }
   }
-  
-   else {
-    console.log("No SQL queries detected.");
-  }
-
 }

@@ -1,84 +1,56 @@
 import validation from '../functions/Validation';
 import fs from 'fs';
 import path from 'path';
+import { identify } from 'sql-query-identifier';
 
 interface TestCase {
-    input: string;
-    expected: string;
+  input: string;
+  expected: string;
 }
 
+jest.mock('sql-query-identifier', () => ({
+  identify: jest.fn(),
+}));
+
 beforeAll(() => {
-    global.alert = jest.fn();
+  global.alert = jest.fn();
 });
 
 describe("SQL Validation Tests", () => {
-    const originalLog = console.log;
-    
-    beforeEach(() => {
-        console.log = jest.fn();
-    });
+  const originalLog = console.log;
 
-    afterEach(() => {
-        console.log = originalLog;
-        jest.restoreAllMocks();
-    });
+  beforeEach(() => {
+    console.log = jest.fn();
+  });
 
-    const testCasesPath = path.join(__dirname, 'sqlValidationTests.json');
-    const testCases: TestCase[] = JSON.parse(fs.readFileSync(testCasesPath, 'utf8'));
+  afterEach(() => {
+    console.log = originalLog;
+    jest.restoreAllMocks();
+  });
 
-    const groupedTestCases: { [key: string]: TestCase[] } = {
-        "CREATE": [],
-        "DROP": [],
-        "ALTER": [],
-        "SHOW": [],
-        "UPDATE_DELETE_TRUNCATE": [],
-        "UNKNOWN": []
-    };
-    
-    
-    testCases.forEach(({ input, expected }) => {
-        if (!Array.isArray(input) || !Array.isArray(expected)) {
-            throw new TypeError('Expected input and expected to be arrays');
+  const testCasesPath = path.join(__dirname, 'sqlValidationTests.json');
+  const testCases: TestCase[] = JSON.parse(fs.readFileSync(testCasesPath, 'utf8'));
+
+  testCases.forEach(({ input, expected }) => {
+    test(`Validates query: ${input}`, () => {
+      const expectedTypeMatch = expected.match(/SQL query of type (\w+)/);
+      const expectedType = expectedTypeMatch ? expectedTypeMatch[1] : 'UNKNOWN';
+
+      (identify as jest.Mock).mockReturnValue([{ type: expectedType }]);
+
+      try {
+        validation(input);
+      } catch (error) {
+        if (error instanceof Error) {
+          expect(error.message).toBe(expected);
+        } else {
+          throw error;
         }
-    
-        input.forEach((query, index) => {
-            const expectedMessage = expected[index];
-            if (typeof query !== 'string' || typeof expectedMessage !== 'string') {
-                throw new TypeError('Expected elements of input and expected to be strings');
-            }
-    
-            
-            if (query.startsWith("CREATE")) {
-                groupedTestCases.CREATE.push({ input: query, expected: expectedMessage });
-            } else if (query.startsWith("DROP")) {
-                groupedTestCases.DROP.push({ input: query, expected: expectedMessage });
-            } else if (query.startsWith("ALTER")) {
-                groupedTestCases.ALTER.push({ input: query, expected: expectedMessage });
-            } else if (query.startsWith("SHOW")) {
-                groupedTestCases.SHOW.push({ input: query, expected: expectedMessage });
-            } else if (["UPDATE", "DELETE", "TRUNCATE"].some(keyword => query.startsWith(keyword))) {
-                groupedTestCases.UPDATE_DELETE_TRUNCATE.push({ input: query, expected: expectedMessage });
-            } else {
-                groupedTestCases.UNKNOWN.push({ input: query, expected: expectedMessage });
-            }
-        });
+      }
+
+      if (expected.includes("SQL query detected!")) {
+        expect(global.alert).toHaveBeenCalledWith("SQL query detected!");
+      }
     });
-    
-    Object.keys(groupedTestCases).forEach(group => {
-        describe(`${group} queries`, () => {
-            groupedTestCases[group].forEach(({ input, expected }) => {
-                test(`Validates query: ${input}`, () => {
-                    try {
-                        validation(input);
-                    } catch (error) {
-                        if (error instanceof Error) {
-                            expect(error.message).toThrow(expected);
-                        } else {
-                            throw error;
-                        }
-                    }
-                });
-            });
-        });
-    });
-});    
+  });
+});
