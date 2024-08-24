@@ -90,15 +90,25 @@ function extractSQLQueries(input: string) {
   return queries;
 }
 
+<<<<<<< HEAD
 
 export default function validation(input: string, rules: object) {
   const data = { text: input };
   const validation = new Validator(data, rules);
+=======
+export default function validation(input: string) {
+  
+  const validation = new Validator({ text: input }, rules);
+>>>>>>> 3ddb8c637219f05bec9272206698a0eec34bbcb3
 
   if (validation.fails()) {
     throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
   }
 
+<<<<<<< HEAD
+=======
+  
+>>>>>>> 3ddb8c637219f05bec9272206698a0eec34bbcb3
   const sqlQueries = extractSQLQueries(input);
   if (sqlQueries.length > 0) {
     console.log("SQL queries detected!");
