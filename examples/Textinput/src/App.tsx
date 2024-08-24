@@ -1,15 +1,21 @@
 import { useState } from 'react';
 import './App.css';
-import { TextInput, validation } from 'protecjs';
 
 function App() {
   const [text, setText] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleChange = (input: string) => {
+  const validateInput = (input: string) => {
+    if (input.includes('<') || input.includes('>')) {
+      throw new Error('Invalid input: HTML tags are not allowed.');
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.target.value;
     try {
-      validation(input); // Call the validation function
+      validateInput(input); 
       setIsValid(true);
       setErrorMessage('');
     } catch (error: any) {
@@ -21,13 +27,11 @@ function App() {
 
   return (
     <div>
-      <TextInput value={text} onChange={handleChange}
-        dompurify={{
-          ALLOWED_TAGS: ['i', 'em', 'strong', 'a'],
-          ALLOWED_ATTR: ['href'],
-          FORBID_TAGS: ['script'],
-          FORBID_ATTR: ['onclick'],
-        }}
+      <input
+        type="text"
+        value={text}
+        onChange={handleChange}
+        placeholder="Enter text"
       />
       <p>Sanitized Text: {text}</p>
       {isValid ? (

@@ -1,10 +1,5 @@
-import { identify } from "sql-query-identifier";
-import Validator from "validatorjs";
-
-
-const rules = {
-  text: 'required|string'
-};
+import { identify } from 'sql-query-identifier';
+import Validator from 'validatorjs';
 
 const keywords = [
   "UPDATE",
@@ -71,6 +66,7 @@ const keywords = [
   "UNKNOWN"
 ];
 
+
 function extractSQLQueries(input: string) {
   const regex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'i');
   const queries = [];
@@ -94,23 +90,23 @@ function extractSQLQueries(input: string) {
   return queries;
 }
 
-export default function validation(input: string) {
-  // Validate input using validatorjs
-  const validation = new Validator({ text: input }, rules);
+
+export default function validation(input: string, rules: object) {
+  const data = { text: input };
+  const validation = new Validator(data, rules);
 
   if (validation.fails()) {
     throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
   }
 
-  // Extract and check SQL queries
   const sqlQueries = extractSQLQueries(input);
   if (sqlQueries.length > 0) {
-    alert("SQL query detected!");
+    console.log("SQL queries detected!");
     for (const query of sqlQueries) {
       const res = identify(query, { strict: false });
       console.log(res[0].type);
       if (res[0].type === 'UNKNOWN') {
-        console.log("It is not a SQL query");
+        console.log("It is not a recognized SQL query.");
       } else {
         throw new Error(`SQL query of type ${res[0].type} detected: ${query}`);
       }
