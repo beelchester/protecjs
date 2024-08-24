@@ -21,11 +21,7 @@ function App() {
 
   return (
     <div>
-<<<<<<< HEAD
       <TextInput value={text} onChange={handleChange}
-=======
-      <TextInput value={text} onChange={setText}
->>>>>>> f86fd5072b5f62379e3f5d1e94d152d2ad436a88
         dompurify={{
           ALLOWED_TAGS: ['i', 'em', 'strong', 'a'],
           ALLOWED_ATTR: ['href'],
