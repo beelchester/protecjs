@@ -89,6 +89,7 @@ function extractSQLQueries(input: string) {
   return queries;
 }
 
+
 export default function validation(input: string, rules: object) {
   const validation = new Validator({ text: input }, rules);
 
@@ -101,7 +102,7 @@ export default function validation(input: string, rules: object) {
     console.log("SQL queries detected!");
     for (const query of sqlQueries) {
       const res = identify(query, { strict: false });
-      console.log(res[0].type);
+      console.log(`Detected query type: ${res[0].type}`);
       if (res[0].type === 'UNKNOWN') {
         console.log("It is not a recognized SQL query.");
       } else {
