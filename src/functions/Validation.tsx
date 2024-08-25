@@ -98,8 +98,7 @@ export default function validation(input: string) {
       if (res[0].type === 'UNKNOWN') {
         console.log("It is not a SQL query");
       } else {
-        throw new Error(`SQL query of type ${res[0].type} detected: ${input}`);
-
+        throw new Error(`SQL query of type ${res[0].type} detected`);
       }
     }
   }

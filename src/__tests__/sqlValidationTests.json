@@ -1,158 +1,234 @@
 [
   {
     "input": "CREATE DATABASE dbname;",
-    "expected": "SQL query of type CREATE_DATABASE detected: CREATE DATABASE dbname;"
+    "expected": "SQL query of type CREATE_DATABASE detected"
   },
   {
     "input": "CREATE SCHEMA schemaname;",
-    "expected": "SQL query of type CREATE_SCHEMA detected: CREATE SCHEMA schemaname;"
+    "expected": "SQL query of type CREATE_SCHEMA detected"
   },
   {
     "input": "CREATE TABLE tablename (column1 INT, column2 VARCHAR(255));",
-    "expected": "SQL query of type CREATE_TABLE detected: CREATE TABLE tablename (column1 INT, column2 VARCHAR(255));"
+    "expected": "SQL query of type CREATE_TABLE detected"
   },
   {
     "input": "CREATE VIEW viewname AS SELECT column1, column2 FROM tablename;",
-    "expected": "SQL query of type CREATE_VIEW detected: CREATE VIEW viewname AS SELECT column1, column2 FROM tablename;"
+    "expected": "SQL query of type CREATE_VIEW detected"
   },
   {
     "input": "CREATE TRIGGER triggername BEFORE INSERT ON tablename FOR EACH ROW BEGIN ... END;",
-    "expected": "SQL query of type CREATE_TRIGGER detected: CREATE TRIGGER triggername BEFORE INSERT ON tablename FOR EACH ROW BEGIN ... END;"
+    "expected": "SQL query of type CREATE_TRIGGER detected"
   },
   {
     "input": "CREATE FUNCTION funcname() RETURNS INT BEGIN RETURN 1; END;",
-    "expected": "SQL query of type CREATE_FUNCTION detected: CREATE FUNCTION funcname() RETURNS INT BEGIN RETURN 1; END;"
+    "expected": "SQL query of type CREATE_FUNCTION detected"
   },
   {
     "input": "CREATE INDEX idxname ON tablename (column1);",
-    "expected": "SQL query of type CREATE_INDEX detected: CREATE INDEX idxname ON tablename (column1);"
+    "expected": "SQL query of type CREATE_INDEX detected"
   },
   {
     "input": "CREATE PROCEDURE procname() BEGIN ... END;",
-    "expected": "SQL query of type CREATE_PROCEDURE detected: CREATE PROCEDURE procname() BEGIN ... END;"
+    "expected": "SQL query of type CREATE_PROCEDURE detected"
   },
   {
     "input": "DROP DATABASE dbname;",
-    "expected": "SQL query of type DROP_DATABASE detected: DROP DATABASE dbname;"
+    "expected": "SQL query of type DROP_DATABASE detected"
   },
   {
     "input": "DROP SCHEMA schemaname;",
-    "expected": "SQL query of type DROP_SCHEMA detected: DROP SCHEMA schemaname;"
+    "expected": "SQL query of type DROP_SCHEMA detected"
   },
   {
     "input": "DROP TABLE tablename;",
-    "expected": "SQL query of type DROP_TABLE detected: DROP TABLE tablename;"
+    "expected": "SQL query of type DROP_TABLE detected"
   },
   {
     "input": "DROP VIEW viewname;",
-    "expected": "SQL query of type DROP_VIEW detected: DROP VIEW viewname;"
+    "expected": "SQL query of type DROP_VIEW detected"
   },
   {
     "input": "DROP TRIGGER triggername;",
-    "expected": "SQL query of type DROP_TRIGGER detected: DROP TRIGGER triggername;"
+    "expected": "SQL query of type DROP_TRIGGER detected"
   },
   {
     "input": "DROP FUNCTION funcname;",
-    "expected": "SQL query of type DROP_FUNCTION detected: DROP FUNCTION funcname;"
+    "expected": "SQL query of type DROP_FUNCTION detected"
   },
   {
     "input": "DROP INDEX idxname ON tablename;",
-    "expected": "SQL query of type DROP_INDEX detected: DROP INDEX idxname ON tablename;"
+    "expected": "SQL query of type DROP_INDEX detected"
   },
   {
     "input": "DROP PROCEDURE procname;",
-    "expected": "SQL query of type DROP_PROCEDURE detected: DROP PROCEDURE procname;"
+    "expected": "SQL query of type DROP_PROCEDURE detected"
   },
   {
     "input": "ALTER DATABASE dbname MODIFY NAME = newname;",
-    "expected": "SQL query of type ALTER_DATABASE detected: ALTER DATABASE dbname MODIFY NAME = newname;"
+    "expected": "SQL query of type ALTER_DATABASE detected"
   },
   {
     "input": "ALTER SCHEMA schemaname RENAME TO newname;",
-    "expected": "SQL query of type ALTER_SCHEMA detected: ALTER SCHEMA schemaname RENAME TO newname;"
+    "expected": "SQL query of type ALTER_SCHEMA detected"
   },
   {
     "input": "ALTER TABLE tablename ADD COLUMN column3 INT;",
-    "expected": "SQL query of type ALTER_TABLE detected: ALTER TABLE tablename ADD COLUMN column3 INT;"
+    "expected": "SQL query of type ALTER_TABLE detected"
   },
   {
     "input": "ALTER VIEW viewname AS SELECT column1, column2 FROM tablename;",
-    "expected": "SQL query of type ALTER_VIEW detected: ALTER VIEW viewname AS SELECT column1, column2 FROM tablename;"
+    "expected": "SQL query of type ALTER_VIEW detected"
   },
   {
     "input": "ALTER TRIGGER triggername AFTER INSERT ON tablename FOR EACH ROW BEGIN ... END;",
-    "expected": "SQL query of type ALTER_TRIGGER detected: ALTER TRIGGER triggername AFTER INSERT ON tablename FOR EACH ROW BEGIN ... END;"
+    "expected": "SQL query of type ALTER_TRIGGER detected"
   },
   {
     "input": "ALTER FUNCTION funcname() RETURNS INT BEGIN RETURN 2; END;",
-    "expected": "SQL query of type ALTER_FUNCTION detected: ALTER FUNCTION funcname() RETURNS INT BEGIN RETURN 2; END;"
+    "expected": "SQL query of type ALTER_FUNCTION detected"
   },
   {
     "input": "ALTER INDEX idxname RENAME TO newindexname;",
-    "expected": "SQL query of type ALTER_INDEX detected: ALTER INDEX idxname RENAME TO newindexname;"
+    "expected": "SQL query of type ALTER_INDEX detected"
   },
   {
     "input": "ALTER PROCEDURE procname() BEGIN ... END;",
-    "expected": "SQL query of type ALTER_PROCEDURE detected: ALTER PROCEDURE procname() BEGIN ... END;"
+    "expected": "SQL query of type ALTER_PROCEDURE detected"
   },
   {
     "input": "SHOW BINARY LOGS;",
-    "expected": "SQL query of type SHOW_BINARY detected: SHOW BINARY LOGS;"
+    "expected": "SQL query of type SHOW_BINARY detected"
   },
   {
     "input": "SHOW BINLOG EVENTS;",
-    "expected": "SQL query of type SHOW_BINLOG detected: SHOW BINLOG EVENTS;"
+    "expected": "SQL query of type SHOW_BINLOG detected"
   },
   {
     "input": "SHOW CHARACTER SET;",
-    "expected": "SQL query of type SHOW_CHARACTER detected: SHOW CHARACTER SET;"
+    "expected": "SQL query of type SHOW_CHARACTER detected"
   },
   {
     "input": "SHOW COLLATION;",
-    "expected": "SQL query of type SHOW_COLLATION detected: SHOW COLLATION;"
+    "expected": "SQL query of type SHOW_COLLATION detected"
   },
   {
     "input": "SHOW COLUMNS FROM tablename;",
-    "expected": "SQL query of type SHOW_COLUMNS detected: SHOW COLUMNS FROM tablename;"
+    "expected": "SQL query of type SHOW_COLUMNS detected"
   },
   {
     "input": "SHOW CREATE TABLE tablename;",
-    "expected": "SQL query of type SHOW_CREATE detected: SHOW CREATE TABLE tablename;"
+    "expected": "SQL query of type SHOW_CREATE detected"
   },
   {
     "input": "SHOW DATABASES;",
-    "expected": "SQL query of type SHOW_DATABASES detected: SHOW DATABASES;"
+    "expected": "SQL query of type SHOW_DATABASES detected"
   },
   {
     "input": "SHOW ENGINE STATUS;",
-    "expected": "SQL query of type SHOW_ENGINE detected: SHOW ENGINE STATUS;"
+    "expected": "SQL query of type SHOW_ENGINE detected"
   },
   {
     "input": "SELECT * FROM tablename;",
-    "expected": "SQL query of type SELECT detected: SELECT * FROM tablename;"
+    "expected": "SQL query of type SELECT detected"
   },
   {
     "input": "INSERT INTO tablename (column1) VALUES (value1);",
-    "expected": "SQL query of type INSERT detected: INSERT INTO tablename (column1) VALUES (value1);"
+    "expected": "SQL query of type INSERT detected"
   },
   {
     "input": "UPDATE tablename SET column1 = value1 WHERE condition;",
-    "expected": "SQL query of type UPDATE detected: UPDATE tablename SET column1 = value1 WHERE condition;"
+    "expected": "SQL query of type UPDATE detected"
   },
   {
     "input": "DELETE FROM tablename WHERE condition;",
-    "expected": "SQL query of type DELETE detected: DELETE FROM tablename WHERE condition;"
+    "expected": "SQL query of type DELETE detected"
   },
   {
     "input": "TRUNCATE TABLE tablename;",
-    "expected": "SQL query of type TRUNCATE detected: TRUNCATE TABLE tablename;"
+    "expected": "SQL query of type TRUNCATE detected"
   },
   {
     "input": "ANONYMOUS_BLOCK BEGIN ... END;",
-    "expected": "SQL query of type ANON_BLOCK detected: ANONYMOUS_BLOCK BEGIN ... END;"
+    "expected": "SQL query of type ANON_BLOCK detected"
   },
   {
     "input": "SOME UNKNOWN QUERY;",
-    "expected": "SQL query of type UNKNOWN detected: SOME UNKNOWN QUERY;"
+    "expected": "SQL query of type UNKNOWN detected"
+  },
+  {
+    "input": "Hi, I'm xyz SELECT * FROM business;",
+    "expected": "SQL query of type SELECT detected"
+  },
+  {
+    "input": "Hello there, just doing some work! UPDATE users SET name='John' WHERE id=1;",
+    "expected": "SQL query of type UPDATE detected"
+  },
+  {
+    "input": "Hey, DROP DATABASE important_db;",
+    "expected": "SQL query of type DROP_DATABASE detected"
+  },
+  {
+    "input": "Good morning! DELETE FROM employees WHERE age > 30;",
+    "expected": "SQL query of type DELETE detected"
+  },
+  {
+    "input": "CREATE a view for me, CREATE VIEW my_view AS SELECT * FROM data;",
+    "expected": "SQL query of type CREATE_VIEW detected"
+  },
+  {
+    "input": "Random text, followed by TRUNCATE TABLE logs;",
+    "expected": "SQL query of type TRUNCATE detected"
+  },
+  {
+    "input": "Here's some gibberish: blah blah INSERT INTO orders (item, quantity) VALUES ('Book', 2);",
+    "expected": "SQL query of type INSERT detected"
+  },
+  {
+    "input": "Nothing suspicious here, just a simple ANONYMOUS_BLOCK BEGIN NULL; END;",
+    "expected": "SQL query of type ANON_BLOCK detected"
+  },
+  {
+    "input": "This message is safe! SELECT 1;",
+    "expected": "SQL query of type SELECT detected"
+  },
+  {
+    "input": "Let's create something! CREATE TABLE users (id INT, name VARCHAR(100));",
+    "expected": "SQL query of type CREATE_TABLE detected"
+  },
+  {
+    "input": "Just a chat here... DROP TABLE sensitive_data;",
+    "expected": "SQL query of type DROP_TABLE detected"
+  },
+  {
+    "input": "ALTERING some random stuff: ALTER TABLE orders ADD COLUMN status VARCHAR(50);",
+    "expected": "SQL query of type ALTER_TABLE detected"
+  },
+  {
+    "input": "CREATE INDEX index_name ON users (name); Also, how's your day?",
+    "expected": "SQL query of type CREATE_INDEX detected"
+  },
+  {
+    "input": "Time for some cleaning... TRUNCATE TABLE temp_logs;",
+    "expected": "SQL query of type TRUNCATE detected"
+  },
+  {
+    "input": "Just casually checking... SHOW DATABASES;",
+    "expected": "SQL query of type SHOW_DATABASES detected"
+  },
+  {
+    "input": "Updating some random info, don't mind me! UPDATE accounts SET active=true WHERE id=42;",
+    "expected": "SQL query of type UPDATE detected"
+  },
+  {
+    "input": "Let's get something deleted... DELETE FROM products WHERE expired=true;",
+    "expected": "SQL query of type DELETE detected"
+  },
+  {
+    "input": "Checking privileges, nothing more: SHOW GRANTS FOR 'admin';",
+    "expected": "SQL query of type SHOW_GRANTS detected"
+  },
+  {
+    "input": "Creating a function, CREATE FUNCTION get_user_count() RETURNS INT BEGIN RETURN 100; END;",
+    "expected": "SQL query of type CREATE_FUNCTION detected"
   }
 ]
