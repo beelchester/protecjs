@@ -88,17 +88,21 @@ function extractSQLQueries(input: string) {
   return queries;
 }
 
-export default function validation(input: string) {
-  const sqlQueries = extractSQLQueries(input);
-  if (sqlQueries.length > 0) {
-    alert("SQL query detected!");
-    for (const query of sqlQueries) {
-      const res = identify(query, { strict: false });
-      console.log(res[0].type);
-      if (res[0].type === 'UNKNOWN') {
-        console.log("It is not a SQL query");
-      } else {
-        throw new Error(`SQL query of type ${res[0].type} detected`);
+interface ValidationType {
+  sql?: boolean;
+}
+
+export default function validation(input: string, type: ValidationType = {}) {
+  const isSql = type?.sql ?? false;
+  if (isSql) {
+    const sqlQueries = extractSQLQueries(input);
+    if (sqlQueries.length > 0) {
+      console.error("SQL query detected!");
+      for (const query of sqlQueries) {
+        const res = identify(query, { strict: false });
+        if (res[0].type !== 'UNKNOWN') {
+          throw new Error(`SQL query of type ${res[0].type} detected`);
+        }
       }
     }
   }
