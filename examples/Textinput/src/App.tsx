@@ -9,7 +9,9 @@ function App() {
 
   const handleChange = (input: string) => {
     try {
-      validation(input); // Call the validation function
+      // validation(input);
+      // validation(input, { sql: false });
+      validation(input, { sql: true });
       setIsValid(true);
       setErrorMessage('');
     } catch (error: any) {
