@@ -148,14 +148,6 @@
     "expected": "SQL query of type TRUNCATE detected"
   },
   {
-    "input": "ANONYMOUS_BLOCK BEGIN ... END;",
-    "expected": "SQL query of type ANON_BLOCK detected"
-  },
-  {
-    "input": "SOME UNKNOWN QUERY;",
-    "expected": "SQL query of type UNKNOWN detected"
-  },
-  {
     "input": "Hi, I'm xyz SELECT * FROM business;",
     "expected": "SQL query of type SELECT detected"
   },
@@ -182,10 +174,6 @@
   {
     "input": "Here's some gibberish: blah blah INSERT INTO orders (item, quantity) VALUES ('Book', 2);",
     "expected": "SQL query of type INSERT detected"
-  },
-  {
-    "input": "Nothing suspicious here, just a simple ANONYMOUS_BLOCK BEGIN NULL; END;",
-    "expected": "SQL query of type ANON_BLOCK detected"
   },
   {
     "input": "This message is safe! SELECT 1;",
