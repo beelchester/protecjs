@@ -101,6 +101,7 @@ export default function validation(input: string, type: ValidationType = {}) {
       for (const query of sqlQueries) {
         const res = identify(query, { strict: false });
         if (res[0].type !== 'UNKNOWN') {
+          //TODO: Send log here
           throw new Error(`SQL query of type ${res[0].type} detected: ${query}`);
         }
       }

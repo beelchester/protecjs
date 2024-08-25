@@ -13,6 +13,9 @@ interface BaseElementProps {
 const BaseElement: React.FC<BaseElementProps> = ({ tag: Tag, value, onChange, dompurify, ...props }) => {
   const handleChange = (event: React.ChangeEvent<any>) => {
     const sanitized = DOMPurify.sanitize(event.target.value, dompurify || {});
+    if (sanitized !== event.target.value) {
+      //TODO: Send log here
+    }
 
     const sanitizedValue = typeof sanitized === 'string' ? sanitized : sanitized.toString();
 
