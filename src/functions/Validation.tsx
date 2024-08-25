@@ -1,5 +1,5 @@
 import { identify } from "sql-query-identifier";
-
+import {maliciousAttemptLogs} from "../db/influxdb"
 const keywords = [
   "INSERT",
   "UPDATE",
@@ -100,6 +100,15 @@ export default function validation(input: string, type: ValidationType = {}) {
       for (const query of sqlQueries) {
         const res = identify(query, { strict: false });
         if (res[0].type !== 'UNKNOWN') {
+          //TODO:send log here
+          const additionalInfo =  {
+            timestamp: new Date().toISOString(),
+      
+            }
+            console.log("SQL Injection attempt detected:", additionalInfo);
+          maliciousAttemptLogs("SQLI_ATTEMPT",additionalInfo)
+
+
           throw new Error(`SQL query of type ${res[0].type} detected`);
         }
       }

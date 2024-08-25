@@ -12,27 +12,6 @@ const influxDB = new InfluxDB({
   token: INFLUXDB_TOKEN!,
 });
 
-// const writeApi = influxDB.getWriteApi(INFLUXDB_ORG!, INFLUXDB_BUCKET!, 'ns');
-
-// Function to send demo data to InfluxDB
-// const sendDemoDataToInfluxDB = async () => {
-//   const demoText = "This is a sample demo text for testing InfluxDB 2.0.";
-
-//   // Create a point with the demo text
-//   const point = new Point('demo_measurement')
-//     .stringField('demo_text', demoText);
-
-//   try {
-//     writeApi.writePoint(point);
-//     await writeApi.flush();
-//     console.log('Demo data sent to InfluxDB:', demoText);
-//   } catch (error) {
-//     console.error('Error sending demo data to InfluxDB:', error);
-//   }
-// };
-
-
-// sendDemoDataToInfluxDB();
 export const maliciousAttemptLogs = (attackType:string,additionalInfo:{[key:string]:any}={})=>{
 
     const writeApi = influxDB.getWriteApi(INFLUXDB_ORG!, INFLUXDB_BUCKET!, 'ns');
@@ -43,6 +22,7 @@ export const maliciousAttemptLogs = (attackType:string,additionalInfo:{[key:stri
     Object.keys(additionalInfo).forEach(key =>{
         point.stringField(key,additionalInfo[key]);
     });
+    console.log("Logging malicious attempt:", { attackType, additionalInfo });
 
     writeApi.writePoint(point);
     writeApi.close().catch(e=>{
@@ -50,4 +30,3 @@ export const maliciousAttemptLogs = (attackType:string,additionalInfo:{[key:stri
     });
 
 };
-
