@@ -2,67 +2,67 @@ import { identify } from 'sql-query-identifier';
 import Validator from 'validatorjs';
 
 const keywords = [
+  "INSERT",
   "UPDATE",
   "DELETE",
   "SELECT",
   "TRUNCATE",
-  "CREATE_DATABASE",
-  "CREATE_SCHEMA",
-  "CREATE_TABLE",
-  "CREATE_VIEW",
-  "CREATE_TRIGGER",
-  "CREATE_FUNCTION",
-  "CREATE_INDEX",
-  "CREATE_PROCEDURE",
-  "DROP_DATABASE",
-  "DROP_SCHEMA",
-  "DROP_TABLE",
-  "DROP_VIEW",
-  "DROP_TRIGGER",
-  "DROP_FUNCTION",
-  "DROP_INDEX",
-  "DROP_PROCEDURE",
-  "ALTER_DATABASE",
-  "ALTER_SCHEMA",
-  "ALTER_TABLE",
-  "ALTER_VIEW",
-  "ALTER_TRIGGER",
-  "ALTER_FUNCTION",
-  "ALTER_INDEX",
-  "ALTER_PROCEDURE",
-  "ANON_BLOCK",
-  "SHOW_BINARY",
-  "SHOW_BINLOG",
-  "SHOW_CHARACTER",
-  "SHOW_COLLATION",
-  "SHOW_COLUMNS",
-  "SHOW_CREATE",
-  "SHOW_DATABASES",
-  "SHOW_ENGINE",
-  "SHOW_ENGINES",
-  "SHOW_ERRORS",
-  "SHOW_EVENTS",
-  "SHOW_FUNCTION",
-  "SHOW_GRANTS",
-  "SHOW_INDEX",
-  "SHOW_MASTER",
-  "SHOW_OPEN",
-  "SHOW_PLUGINS",
-  "SHOW_PRIVILEGES",
-  "SHOW_PROCEDURE",
-  "SHOW_PROCESSLIST",
-  "SHOW_PROFILE",
-  "SHOW_PROFILES",
-  "SHOW_RELAYLOG",
-  "SHOW_REPLICAS",
-  "SHOW_SLAVE",
-  "SHOW_REPLICA",
-  "SHOW_STATUS",
-  "SHOW_TABLE",
-  "SHOW_TABLES",
-  "SHOW_TRIGGERS",
-  "SHOW_VARIABLES",
-  "SHOW_WARNINGS",
+  "CREATE DATABASE",
+  "CREATE SCHEMA",
+  "CREATE TABLE",
+  "CREATE VIEW",
+  "CREATE TRIGGER",
+  "CREATE FUNCTION",
+  "CREATE INDEX",
+  "CREATE PROCEDURE",
+  "DROP DATABASE",
+  "DROP SCHEMA",
+  "DROP TABLE",
+  "DROP VIEW",
+  "DROP TRIGGER",
+  "DROP FUNCTION",
+  "DROP INDEX",
+  "DROP PROCEDURE",
+  "ALTER DATABASE",
+  "ALTER SCHEMA",
+  "ALTER TABLE",
+  "ALTER VIEW",
+  "ALTER TRIGGER",
+  "ALTER FUNCTION",
+  "ALTER INDEX",
+  "ALTER PROCEDURE",
+  "SHOW BINARY", // MySQL and generic dialects only
+  "SHOW BINLOG", // MySQL and generic dialects only
+  "SHOW CHARACTER", // MySQL and generic dialects only
+  "SHOW COLLATION", // MySQL and generic dialects only
+  "SHOW COLUMNS", // MySQL and generic dialects only
+  "SHOW CREATE", // MySQL and generic dialects only
+  "SHOW DATABASES", // MySQL and generic dialects only
+  "SHOW ENGINE", // MySQL and generic dialects only
+  "SHOW ENGINES", // MySQL and generic dialects only
+  "SHOW ERRORS", // MySQL and generic dialects only
+  "SHOW EVENTS", // MySQL and generic dialects only
+  "SHOW FUNCTION", // MySQL and generic dialects only
+  "SHOW GRANTS", // MySQL and generic dialects only
+  "SHOW INDEX", // MySQL and generic dialects only
+  "SHOW MASTER", // MySQL and generic dialects only
+  "SHOW OPEN", // MySQL and generic dialects only
+  "SHOW PLUGINS", // MySQL and generic dialects only
+  "SHOW PRIVILEGES", // MySQL and generic dialects only
+  "SHOW PROCEDURE", // MySQL and generic dialects only
+  "SHOW PROCESSLIST", // MySQL and generic dialects only
+  "SHOW PROFILE", // MySQL and generic dialects only
+  "SHOW PROFILES", // MySQL and generic dialects only
+  "SHOW RELAYLOG", // MySQL and generic dialects only
+  "SHOW REPLICAS", // MySQL and generic dialects only
+  "SHOW SLAVE", // MySQL and generic dialects only
+  "SHOW REPLICA", // MySQL and generic dialects only
+  "SHOW STATUS", // MySQL and generic dialects only
+  "SHOW TABLE", // MySQL and generic dialects only
+  "SHOW TABLES", // MySQL and generic dialects only
+  "SHOW TRIGGERS", // MySQL and generic dialects only
+  "SHOW VARIABLES",
+  "SHOW WARNINGS",
   "UNKNOWN"
 ];
 
@@ -89,24 +89,24 @@ function extractSQLQueries(input: string) {
   return queries;
 }
 
-
-export default function validation(input: string, rules: object) {
+interface ValidationType {
+  sql?: boolean;
+}
+  
+export default function validation(input: string, type: ValidationType = {}, rules: object) {
   const validation = new Validator({ text: input }, rules);
-
   if (validation.fails()) {
     throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
   }
-
-  const sqlQueries = extractSQLQueries(input);
-  if (sqlQueries.length > 0) {
-    console.log("SQL queries detected!");
-    for (const query of sqlQueries) {
-      const res = identify(query, { strict: false });
-      console.log(`Detected query type: ${res[0].type}`);
-      if (res[0].type === 'UNKNOWN') {
-        console.log("It is not a recognized SQL query.");
-      } else {
-        throw new Error(`SQL query of type ${res[0].type} detected: ${query}`);
+  const isSql = type?.sql ?? false;
+  if (isSql) {
+    const sqlQueries = extractSQLQueries(input);
+    if (sqlQueries.length > 0) {
+      for (const query of sqlQueries) {
+        const res = identify(query, { strict: false });
+        if (res[0].type !== 'UNKNOWN') {
+          throw new Error(`SQL query of type ${res[0].type} detected`);
+        }
       }
     }
   }

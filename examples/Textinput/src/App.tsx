@@ -25,7 +25,9 @@ function App() {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value;
     try {
-      validateInput(input);
+      // validation(input);
+      // validation(input, { sql: false });
+      validation(input, { sql: true });
       setIsValid(true);
       setErrorMessage('');
     } catch (error: any) {
