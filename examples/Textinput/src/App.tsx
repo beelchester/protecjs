@@ -1,13 +1,29 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
-import { TextInput, validation } from 'protecjs';
 
 function App() {
   const [text, setText] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleChange = (input: string) => {
+  const rules = {
+    text: { min: 5, max: 100 }
+  };
+
+  const validateInput = (input: string) => {
+    if (input.includes('<') || input.includes('>')) {
+      throw new Error('Invalid input: HTML tags are not allowed.');
+    }
+
+    const { min, max } = rules.text;
+    if (input.length < min || input.length > max) {
+      throw new Error(`Input must be between ${min} and ${max} characters.`);
+    }
+  };
+
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const input = event.target.value;
     try {
       // validation(input);
       // validation(input, { sql: false });
@@ -18,18 +34,16 @@ function App() {
       setIsValid(false);
       setErrorMessage(error.message);
     }
-    setText(input);
+    setText(input); 
   };
 
   return (
     <div>
-      <TextInput value={text} onChange={handleChange}
-        dompurify={{
-          ALLOWED_TAGS: ['i', 'em', 'strong', 'a'],
-          ALLOWED_ATTR: ['href'],
-          FORBID_TAGS: ['script'],
-          FORBID_ATTR: ['onclick'],
-        }}
+      <input
+        type="text"
+        value={text}
+        onChange={handleChange}
+        placeholder="Enter text"
       />
       <p>Sanitized Text: {text}</p>
       {isValid ? (
@@ -38,7 +52,7 @@ function App() {
         <p style={{ color: 'red' }}>{errorMessage}</p>
       )}
     </div>
-  )
+  );
 }
 
 export default App;

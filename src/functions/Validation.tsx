@@ -1,4 +1,5 @@
-import { identify } from "sql-query-identifier";
+import { identify } from 'sql-query-identifier';
+import Validator from 'validatorjs';
 
 const keywords = [
   "INSERT",
@@ -91,8 +92,12 @@ function extractSQLQueries(input: string) {
 interface ValidationType {
   sql?: boolean;
 }
-
-export default function validation(input: string, type: ValidationType = {}) {
+  
+export default function validation(input: string, type: ValidationType = {}, rules: object) {
+  const validation = new Validator({ text: input }, rules);
+  if (validation.fails()) {
+    throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
+  }
   const isSql = type?.sql ?? false;
   if (isSql) {
     const sqlQueries = extractSQLQueries(input);
