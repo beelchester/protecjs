@@ -105,7 +105,7 @@ export default function validation(input: string, type: ValidationType = {}) {
             timestamp: new Date().toISOString(),
       
             }
-            console.log("SQL Injection attempt detected:", additionalInfo);
+            
           maliciousAttemptLogs("SQLI_ATTEMPT",additionalInfo)
 
 

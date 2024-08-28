@@ -12,17 +12,24 @@ interface BaseElementProps {
 }
 
 const BaseElement: React.FC<BaseElementProps> = ({ tag: Tag, value, onChange, dompurify, ...props }) => {
-  const handleChange = (event: React.ChangeEvent<any>) => {
+  const handleChange =async (event: React.ChangeEvent<any>) => {
     const sanitized = DOMPurify.sanitize(event.target.value, dompurify || {});
+    
+    
    
     if (sanitized !== event.target.value) {
       //TODO: Send log here which should include the type of attack and any additional info
-      const additionalInfo =  {
-      timestamp: new Date().toISOString(),
+      const additionalInfo = {
+        timestamp: new Date().toISOString(),
+        originalValue: event.target.value,
+        sanitizedValue: sanitized,
+        userAgent: navigator.userAgent, //
+        ipAddress: 'unknown', // TODO: Get the user's IP address
 
-      }
-      console.log("XSS attempt detected:", additionalInfo);
-      maliciousAttemptLogs("XSS_Attempt",additionalInfo)
+      };
+
+      
+      await maliciousAttemptLogs("XSS_Attempt",additionalInfo)
 
     }
 
