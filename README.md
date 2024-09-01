@@ -78,12 +78,15 @@ const dompurifyConfig = {
 ```
 
 SQL Injection Validation
+
 Our library provides built-in protection against SQL injection attacks through an optional SQL validation feature. This validation automatically checks input fields for common SQL injection patterns and throws an error if a potential attack is detected. By default, SQL validation is enabled, but it can be disabled as needed.
 
 SQL Injection Detection
+
 SQL injection is a common attack method that malicious actors use to manipulate SQL queries by injecting arbitrary SQL code through input fields. Our validation function is designed to detect and block such attempts, safeguarding your application against these attacks.
 
 Usage
+
 To use SQL validation in your application, simply call the validation() function with your input data. SQL validation is enabled by default, so no additional configuration is required.
 
 Example 1: Default SQL Validation (Disabled)
