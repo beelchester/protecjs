@@ -76,28 +76,17 @@ const dompurifyConfig = {
   SAFE_FOR_TWITTER: true                        // Make the sanitizer safe for Twitter
 };
 ```
+## Validation
+### SQL Injection Validation
 
-SQL Injection Validation
+Protecjs includes optional SQL validation to guard against SQL injection attacks. By default, this validation is **disabled** but can be enabled if needed. When enabled, it checks input fields for common injection patterns and throws an error if a threat is detected.
 
-Our library provides built-in protection against SQL injection attacks through an optional SQL validation feature. This validation automatically checks input fields for common SQL injection patterns and throws an error if a potential attack is detected. By default, SQL validation is enabled, but it can be disabled as needed.
+SQL injection is a tactic used to manipulate SQL queries by injecting harmful SQL code through input fields. Our validation function identifies and blocks such attempts, protecting your application.
 
-SQL Injection Detection
+### Usage
+To implement SQL validation, use the `validation()` function with your input data. Since SQL validation is off by default, you need to enable it if required.
 
-SQL injection is a common attack method that malicious actors use to manipulate SQL queries by injecting arbitrary SQL code through input fields. Our validation function is designed to detect and block such attempts, safeguarding your application against these attacks.
-
-Usage
-
-To use SQL validation in your application, simply call the validation() function with your input data. SQL validation is enabled by default, so no additional configuration is required.
-
-Example 1: Default SQL Validation (Disabled)
-```bash
-validation(input);  // SQL validation is disabled by default
-```
-This can be useful in scenarios where you are confident that the input is already sanitized or if SQL injection protection is handled elsewhere.
-
-
-Example 2: Disabling SQL Validation
+**Example**
 ```bash
 validation(input, { sql: true });  // SQL validation is enabled
 ```
-If you need to enable SQL validation, you can pass an options object with sql: true. If any malicious patterns are detected, an error will be thrown.
