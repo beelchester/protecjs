@@ -76,3 +76,17 @@ const dompurifyConfig = {
   SAFE_FOR_TWITTER: true                        // Make the sanitizer safe for Twitter
 };
 ```
+## Validation
+### SQL Injection Validation
+
+Protecjs includes optional SQL validation to guard against SQL injection attacks. By default, this validation is **disabled** but can be enabled if needed. When enabled, it checks input fields for common injection patterns and throws an error if a threat is detected.
+
+SQL injection is a tactic used to manipulate SQL queries by injecting harmful SQL code through input fields. Our validation function identifies and blocks such attempts, protecting your application.
+
+### Usage
+To implement SQL validation, use the `validation()` function with your input data. Since SQL validation is off by default, you need to enable it if required.
+
+**Example**
+```bash
+validation(input, { sql: true });  // SQL validation is enabled
+```
