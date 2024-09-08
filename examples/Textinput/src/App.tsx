@@ -8,8 +8,6 @@ function App() {
 
   const handleChange = (input: string) => {
     try {
-      // validation(input);
-      // validation(input, { sql: false });
       validation(input, { sql: true });
       setIsValid(true);
       setErrorMessage('');
@@ -22,7 +20,14 @@ function App() {
 
   return (
     <HelmetProvider>
-      <CSPMeta policy="default-src 'self'; script-src 'self' https://apis.google.com" />
+      <CSPMeta 
+        policy="default-src 'self'; script-src 'self' https://apis.google.com"
+        additionalMetaTags={[
+          { name: "description", content: "A React app with CSP and validation" },
+          { name: "author", content: "Your Name" },
+          { property: "og:title", content: "My React App" }
+        ]}
+      />
       <div>
         <TextInput value={text} onChange={handleChange}
           dompurify={{
