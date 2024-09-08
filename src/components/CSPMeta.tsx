@@ -13,5 +13,5 @@ const CSPMeta: React.FC<CSPMetaProps> = ({ policy }) => {
   );
 };
 
-export const HelmetProvider = Provider;
+export { Provider as HelmetProvider };
 export default CSPMeta;

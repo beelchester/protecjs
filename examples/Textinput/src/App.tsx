@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import './App.css';
-import { TextInput, validation } from 'protecjs';
+import { HelmetProvider, CSPMeta, TextInput, validation } from 'protecjs';
 
 function App() {
   const [text, setText] = useState('');
@@ -22,23 +21,26 @@ function App() {
   };
 
   return (
-    <div>
-      <TextInput value={text} onChange={handleChange}
-        dompurify={{
-          ALLOWED_TAGS: ['i', 'em', 'strong', 'a'],
-          ALLOWED_ATTR: ['href'],
-          FORBID_TAGS: ['script'],
-          FORBID_ATTR: ['onclick'],
-        }}
-      />
-      <p>Sanitized Text: {text}</p>
-      {isValid ? (
-        <p>Input is valid</p>
-      ) : (
-        <p style={{ color: 'red' }}>{errorMessage}</p>
-      )}
-    </div>
-  )
+    <HelmetProvider>
+      <CSPMeta policy="default-src 'self'; script-src 'self' https://apis.google.com" />
+      <div>
+        <TextInput value={text} onChange={handleChange}
+          dompurify={{
+            ALLOWED_TAGS: ['i', 'em', 'strong', 'a'],
+            ALLOWED_ATTR: ['href'],
+            FORBID_TAGS: ['script'],
+            FORBID_ATTR: ['onclick'],
+          }}
+        />
+        <p>Sanitized Text: {text}</p>
+        {isValid ? (
+          <p>Input is valid</p>
+        ) : (
+          <p style={{ color: 'red' }}>{errorMessage}</p>
+        )}
+      </div>
+    </HelmetProvider>
+  );
 }
 
 export default App;
