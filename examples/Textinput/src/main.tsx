@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { HelmetProvider, CSPMeta } from 'protecjs'; // Importing from your library
+import { HelmetProvider, CSPMeta } from 'protecjs';
 import App from './App.tsx';
 import './index.css';
 
