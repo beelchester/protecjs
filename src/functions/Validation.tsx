@@ -92,9 +92,10 @@ function extractSQLQueries(input: string) {
 interface ValidationType {
   sql?: boolean;
 }
-  
-export default function validation(input: string, type: ValidationType = {}, rules: object) {
-  const validation = new Validator({ text: input }, rules);
+
+//TODO: use Rules as arg instead of object for type safety
+export default function validation(input: string, type: ValidationType = {}, rules: object = {}) {
+  const validation = new Validator({ text: input }, rules as Validator.Rules);
   if (validation.fails()) {
     throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
   }
