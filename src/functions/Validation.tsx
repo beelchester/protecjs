@@ -101,7 +101,7 @@ export function validation(
   if (type.type === 'password') {
     const passwordSchema = new PasswordValidator();
 
-    // Setting up the password validation schema based on the provided passwordRules
+    // Set password rules
     passwordSchema
       .is().min(passwordRules.minLength || 8)  // Minimum length
       .has().uppercase(passwordRules.uppercase || 1)  // At least one uppercase letter
@@ -111,8 +111,9 @@ export function validation(
       .has().not().spaces(passwordRules.spaces || 0);  // No spaces allowed
 
     const validationResult = passwordSchema.validate(input, { details: true });
-    
-    if (validationResult.length > 0) {
+
+    // If validationResult is true (i.e., validation passed), we skip the error handling
+    if (Array.isArray(validationResult) && validationResult.length > 0) {
       const errorMessages = validationResult.map((rule: any) => {
         switch (rule.validation) {
           case 'min':
