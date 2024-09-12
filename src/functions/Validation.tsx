@@ -92,7 +92,7 @@ interface ValidationType {
   type?: 'text' | 'password';
 }
 
-export function validation(
+export default function validation(
   input: string,
   type: ValidationType = { type: 'text' },
   rules: object = {},

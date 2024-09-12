@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import { validation } from 'protecjs';
+import validation  from 'protecjs';
 
 function App() {
   const [text, setText] = useState('');
