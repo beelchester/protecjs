@@ -1,5 +1,6 @@
 import { identify } from 'sql-query-identifier';
 import Validator from 'validatorjs';
+import PasswordValidator from 'password-validator';
 
 const keywords = [
   "INSERT",
@@ -69,17 +70,14 @@ const keywords = [
 function extractSQLQueries(input: string) {
   const regex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'i');
   const queries = [];
-
   let currentIndex = 0;
 
   while (currentIndex < input.length) {
     const match = input.slice(currentIndex).match(regex);
-
     if (!match) break;
 
     const keywordIndex = currentIndex + (match.index as number);
     const endIndex = input.indexOf(';', keywordIndex);
-
     if (endIndex === -1) break;
 
     queries.push(input.slice(keywordIndex, endIndex + 1).trim());
@@ -91,21 +89,64 @@ function extractSQLQueries(input: string) {
 
 interface ValidationType {
   sql?: boolean;
+  type?: 'text' | 'password';
 }
-  
-export default function validation(input: string, type: ValidationType = {}, rules: object) {
-  const validation = new Validator({ text: input }, rules);
-  if (validation.fails()) {
-    throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
-  }
-  const isSql = type?.sql ?? false;
-  if (isSql) {
-    const sqlQueries = extractSQLQueries(input);
-    if (sqlQueries.length > 0) {
-      for (const query of sqlQueries) {
-        const res = identify(query, { strict: false });
-        if (res[0].type !== 'UNKNOWN') {
-          throw new Error(`SQL query of type ${res[0].type} detected`);
+
+export function validation(
+  input: string,
+  type: ValidationType = { type: 'text' },
+  rules: object = {},
+  passwordRules: { minLength?: number; uppercase?: number; lowercase?: number; digits?: number; symbols?: number; spaces?: number } = {}
+) {
+  if (type.type === 'password') {
+    const passwordSchema = new PasswordValidator();
+
+    // Setting up the password validation schema based on the provided passwordRules
+    passwordSchema
+      .is().min(passwordRules.minLength || 8)  // Minimum length
+      .has().uppercase(passwordRules.uppercase || 1)  // At least one uppercase letter
+      .has().lowercase(passwordRules.lowercase || 1)  // At least one lowercase letter
+      .has().digits(passwordRules.digits || 1)  // At least one digit
+      .has().symbols(passwordRules.symbols || 1)  // At least one special character
+      .has().not().spaces(passwordRules.spaces || 0);  // No spaces allowed
+
+    const validationResult = passwordSchema.validate(input, { details: true });
+    
+    if (validationResult.length > 0) {
+      const errorMessages = validationResult.map((rule: any) => {
+        switch (rule.validation) {
+          case 'min':
+            return 'Password must be at least 8 characters long';
+          case 'uppercase':
+            return 'Password must have at least 1 uppercase letter';
+          case 'lowercase':
+            return 'Password must have at least 1 lowercase letter';
+          case 'digits':
+            return 'Password must contain at least 1 digit';
+          case 'symbols':
+            return 'Password must contain at least 1 special character';
+          case 'spaces':
+            return 'Password must not contain spaces';
+          default:
+            return 'Password validation failed';
+        }
+      });
+      throw new Error(errorMessages.join(', '));
+    }
+  } else {
+    const validation = new Validator({ text: input }, rules);
+    if (validation.fails()) {
+      throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
+    }
+
+    if (type.sql) {
+      const sqlQueries = extractSQLQueries(input);
+      if (sqlQueries.length > 0) {
+        for (const query of sqlQueries) {
+          const res = identify(query, { strict: false });
+          if (res[0].type !== 'UNKNOWN') {
+            throw new Error(`SQL query of type ${res[0].type} detected`);
+          }
         }
       }
     }
