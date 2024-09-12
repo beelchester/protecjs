@@ -1,4 +1,4 @@
-import validation from '../functions/Validation';
+import {validation} from '../functions/Validation';
 import fs from 'fs';
 import path from 'path';
 
