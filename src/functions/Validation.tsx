@@ -115,8 +115,7 @@ export default function validation(input: string, type: ValidationType = {}) {
       textRules.args);
 
     if (!validate) {
-      const errorMsg = textRules.args ? "Validation failed: " + textRules.validator + " " + textRules.args : "Validation failed: " + textRules.validator;
-      throw new Error(errorMsg);
+      throw new Error("Validation failed: " + textRules.validator);
     }
   }
   if (type.password) {
