@@ -165,7 +165,6 @@ export default function validation(input: string, type: ValidationType = {}) {
     }
 
     const validationResult = passwordSchema.validate(input, { details: true });
-    console.log(validationResult);
 
     if (typeof validationResult !== 'boolean') {
       validationResult.forEach((rule: any) => {

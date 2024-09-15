@@ -85,7 +85,7 @@ function App() {
   return (
     <div>
       {isValid ? (
-        <p>Password is valid</p>
+        <p>Input is valid</p>
       ) : (
         <p style={{ color: 'red' }}>{errorMessage}</p>
       )}
