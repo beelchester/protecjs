@@ -3,37 +3,63 @@ import './App.css';
 import { TextInput, validate } from 'protecjs';
 
 function App() {
-  const [text, setText] = useState('');
+  const [sqlText, setSqlText] = useState('');
+  const [emailText, setEmailText] = useState('');
+  const [rtmpText, setRtmpText] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const rules = {
-    text: { min: 5, max: 100 }
-  };
-
-  const handleChange = (input: string) => {
+  const handleSqlChange = (input: string) => {
     try {
-      // validation(input);
-      // validation(input, { sql: false });
-      validate(input, { sql: true }, rules);
+      validate(input, { sql: true });
       setIsValid(true);
       setErrorMessage('');
     } catch (error: any) {
       setIsValid(false);
       setErrorMessage(error.message);
     }
-    setText(input);
+    setSqlText(input);
+  };
+
+  const handleEmailChange = (input: string) => {
+    try {
+      validate(input, { text: { validator: 'isEmail' } });
+      setIsValid(true);
+      setErrorMessage('');
+    } catch (error: any) {
+      setIsValid(false);
+      setErrorMessage(error.message);
+    }
+    setEmailText(input);
+  };
+
+  const handleRtmpChange = (input: string) => {
+    //    valid: 'rtmp://foobar.com'
+    //    invalid: 'http://foobar.com'
+    try {
+      validate(input, { text: { validator: 'isURL', args: { protocols: ['rtmp'] } } });
+      setIsValid(true);
+      setErrorMessage('');
+    } catch (error: any) {
+      setIsValid(false);
+      setErrorMessage(error.message);
+    }
+    setRtmpText(input);
   };
 
   return (
     <div>
-      <TextInput value={text} onChange={handleChange} />
-      <p>Sanitized Text: {text}</p>
       {isValid ? (
         <p>Input is valid</p>
       ) : (
         <p style={{ color: 'red' }}>{errorMessage}</p>
       )}
+      <h3> XSS sanitization with SQL injection validation</h3>
+      <TextInput value={sqlText} onChange={handleSqlChange} />
+      <h3> XSS sanitization with Text validation (email)</h3>
+      <TextInput value={emailText} onChange={handleEmailChange} />
+      <h3> XSS sanitization with Text validation (rtmp url)</h3>
+      <TextInput value={rtmpText} onChange={handleRtmpChange} />
     </div>
   );
 }

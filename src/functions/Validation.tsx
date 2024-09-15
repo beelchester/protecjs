@@ -1,5 +1,5 @@
 import { identify } from 'sql-query-identifier';
-import Validator from 'validatorjs';
+import validator from 'validator';
 
 const keywords = [
   "INSERT",
@@ -91,13 +91,24 @@ function extractSQLQueries(input: string) {
 
 interface ValidationType {
   sql?: boolean;
+  text?: TextRules;
 }
 
-//TODO: use Rules as arg instead of object for type safety
-export default function validation(input: string, type: ValidationType = {}, rules: object = {}) {
-  const validation = new Validator({ text: input }, rules as Validator.Rules);
-  if (validation.fails()) {
-    throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
+interface TextRules {
+  validator: keyof typeof validator;
+  args: any;
+}
+
+export default function validation(input: string, type: ValidationType = {}) {
+  if (type.text) {
+    let textRules = type.text;
+    const validate = (validator[textRules.validator] as (input: string, options?: any) => boolean)(input,
+      textRules.args);
+
+    if (!validate) {
+      const errorMsg = textRules.args ? "Validation failed: " + textRules.validator + " " + textRules.args : "Validation failed: " + textRules.validator;
+      throw new Error(errorMsg);
+    }
   }
   const isSql = type?.sql ?? false;
   if (isSql) {
