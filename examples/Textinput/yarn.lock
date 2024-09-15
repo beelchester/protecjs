@@ -1465,21 +1465,6 @@ prelude-ls@^1.2.1:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
-protecjs@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/protecjs/-/protecjs-0.0.5.tgz#6fdb64577834d0b651a4f61d3d8c45afbfee5d3f"
-  integrity sha512-xhkKjZmbvihtYONRDu5riuoOy/+KKMtqxs9RsxTmoXdQqnas+XqrqFHfQ0LbI+HyrASiARiqEs5joEqQu4Maqg==
-  dependencies:
-    "@types/dompurify" "^3.0.5"
-    "@types/react" "^18.3.5"
-    "@types/react-dom" "^18.3.0"
-    dompurify "^3.1.6"
-    react "^18.3.1"
-    react-dom "^18.3.1"
-    react-helmet-async "^2.0.5"
-    sql-query-identifier "^2.7.0"
-    typescript "^5.5.4"
-
 "protecjs@file:../..":
   version "0.0.1"
   dependencies:
@@ -1734,10 +1719,10 @@ validatorjs@^3.22.1:
   resolved "https://registry.yarnpkg.com/validatorjs/-/validatorjs-3.22.1.tgz#13dbbe6556cf4ab87759105d13b1d31a9a54ce54"
   integrity sha512-451KiCt/3E8qV/8fOUdO0YkA8zUdQBNVxubg9jvgEB+JAg9IlRKrClzwq2ir2ndj7TWmPYQ7bXFb4BxcyX2iWw==
 
-vite@^5.3.1:
-  version "5.3.4"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-5.3.4.tgz#b36ebd47c8a5e3a8727046375d5f10bf9fdf8715"
-  integrity sha512-Cw+7zL3ZG9/NZBB8C+8QbQZmR54GwqIz+WMI4b3JgdYJvX+ny9AjJXqkGQlDXSXRP9rP0B4tbciRMOVEKulVOA==
+vite@^5.4.3:
+  version "5.4.5"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-5.4.5.tgz#e4ab27709de46ff29bd8db52b0c51606acba893b"
+  integrity sha512-pXqR0qtb2bTwLkev4SE3r4abCNioP3GkjvIDLlzziPpXtHgiJIjuKl+1GN6ESOT3wMjG3JTeARopj2SwYaHTOA==
   dependencies:
     esbuild "^0.21.3"
     postcss "^8.4.43"
