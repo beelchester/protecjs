@@ -18,7 +18,7 @@ const CSPMeta: React.FC<CSPMetaProps> = ({ policy, additionalMetaTags = [] }) =>
     <Helmet>
       <meta httpEquiv="Content-Security-Policy" content={policy} />
       {additionalMetaTags.map((tag, index) => (
-        <meta 
+        <meta
           key={index}
           name={tag.name}
           httpEquiv={tag.httpEquiv}
@@ -30,5 +30,5 @@ const CSPMeta: React.FC<CSPMetaProps> = ({ policy, additionalMetaTags = [] }) =>
   );
 };
 
-export { Provider as HelmetProvider };
+export { Provider as CSPHelmet };
 export default CSPMeta;
