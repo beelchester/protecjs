@@ -1,4 +1,5 @@
 import { identify } from 'sql-query-identifier';
+import PasswordValidator from 'password-validator';
 import validator from 'validator';
 
 const keywords = [
@@ -69,17 +70,14 @@ const keywords = [
 function extractSQLQueries(input: string) {
   const regex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'i');
   const queries = [];
-
   let currentIndex = 0;
 
   while (currentIndex < input.length) {
     const match = input.slice(currentIndex).match(regex);
-
     if (!match) break;
 
     const keywordIndex = currentIndex + (match.index as number);
     const endIndex = input.indexOf(';', keywordIndex);
-
     if (endIndex === -1) break;
 
     queries.push(input.slice(keywordIndex, endIndex + 1).trim());
@@ -92,11 +90,22 @@ function extractSQLQueries(input: string) {
 interface ValidationType {
   sql?: boolean;
   text?: TextRules;
+  password?: PasswordRules;
 }
 
 interface TextRules {
   validator: keyof typeof validator;
-  args: any;
+  args?: any;
+}
+
+interface PasswordRules {
+  default?: boolean;
+  minLength?: number;
+  uppercase?: number;
+  lowercase?: number;
+  digits?: number;
+  symbols?: number;
+  spaces?: number;
 }
 
 export default function validation(input: string, type: ValidationType = {}) {
@@ -109,6 +118,65 @@ export default function validation(input: string, type: ValidationType = {}) {
       const errorMsg = textRules.args ? "Validation failed: " + textRules.validator + " " + textRules.args : "Validation failed: " + textRules.validator;
       throw new Error(errorMsg);
     }
+  }
+  if (type.password) {
+    const passwordSchema = new PasswordValidator();
+    const passwordRules = type.password;
+    const defaultRules = { minLength: 8, uppercase: 1, lowercase: 1, digits: 1, symbols: 1, spaces: 0 };
+    const isDefault = type.password.default ?? false;
+    if (isDefault) {
+      // Support overriding default rules
+      if (!passwordRules.minLength) {
+        passwordRules.minLength = defaultRules.minLength;
+      }
+      if (!passwordRules.uppercase) {
+        passwordRules.uppercase = defaultRules.uppercase;
+      }
+      if (!passwordRules.lowercase) {
+        passwordRules.lowercase = defaultRules.lowercase;
+      }
+      if (!passwordRules.digits) {
+        passwordRules.digits = defaultRules.digits;
+      }
+      if (!passwordRules.symbols) {
+        passwordRules.symbols = defaultRules.symbols;
+      }
+      if (!passwordRules.spaces) {
+        passwordRules.spaces = defaultRules.spaces;
+      }
+    }
+
+    if (passwordRules.minLength) {
+      passwordSchema.is().min(passwordRules.minLength);
+    }
+    if (passwordRules.uppercase) {
+      passwordSchema.has().uppercase(passwordRules.uppercase);
+    }
+    if (passwordRules.lowercase) {
+      passwordSchema.has().lowercase(passwordRules.lowercase);
+    }
+    if (passwordRules.digits) {
+      passwordSchema.has().digits(passwordRules.digits);
+    }
+    if (passwordRules.symbols) {
+      passwordSchema.has().symbols(passwordRules.symbols);
+    }
+    if (passwordRules.spaces) {
+      passwordSchema.has().not().spaces(passwordRules.spaces);
+    }
+
+    const validationResult = passwordSchema.validate(input, { details: true });
+    console.log(validationResult);
+
+    if (typeof validationResult !== 'boolean') {
+      validationResult.forEach((rule: any) => {
+        if (rule.message) {
+          const errorMsg = rule.message;
+          throw new Error(errorMsg);
+        }
+      });
+    }
+
   }
   const isSql = type?.sql ?? false;
   if (isSql) {

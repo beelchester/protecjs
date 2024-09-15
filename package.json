@@ -6,11 +6,12 @@
   "license": "MIT",
   "dependencies": {
     "@types/dompurify": "^3.0.5",
-    "@types/react": "^18.3.4",
+    "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@types/validator": "^13.12.1",
     "@types/validatorjs": "^3.15.5",
     "dompurify": "^3.1.6",
+    "password-validator": "^5.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "sql-query-identifier": "^2.7.0",
