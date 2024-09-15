@@ -1,4 +1,4 @@
-import validation from '../functions/Validation';
+import validate from '../functions/Validation';
 import fs from 'fs';
 import path from 'path';
 
@@ -15,7 +15,7 @@ describe("SQL Validation Tests", () => {
     test(`Validates query: ${input}`, () => {
       let result: string | undefined;
       try {
-        validation(input, { sql: true });
+        validate(input, { sql: true });
       } catch (error: any) {
         result = error.message;
       }
