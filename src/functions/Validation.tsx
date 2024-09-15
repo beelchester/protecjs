@@ -89,16 +89,26 @@ function extractSQLQueries(input: string) {
 
 interface ValidationType {
   sql?: boolean;
-  type?: 'text' | 'password';
+  text?: TextRules;
+  password?: PasswordRules;
 }
 
 interface TextRules {
   validator: keyof typeof validator;
-  args: any;
+  args?: any;
+}
+
+interface PasswordRules {
+  default?: boolean;
+  minLength?: number;
+  uppercase?: number;
+  lowercase?: number;
+  digits?: number;
+  symbols?: number;
+  spaces?: number;
 }
 
 export default function validation(input: string, type: ValidationType = {}) {
-  // passwordRules: { minLength?: number; uppercase?: number; lowercase?: number; digits?: number; symbols?: number; spaces?: number } = {}
   if (type.text) {
     let textRules = type.text;
     const validate = (validator[textRules.validator] as (input: string, options?: any) => boolean)(input,
@@ -109,42 +119,64 @@ export default function validation(input: string, type: ValidationType = {}) {
       throw new Error(errorMsg);
     }
   }
-  if (type.type === 'password') {
+  if (type.password) {
     const passwordSchema = new PasswordValidator();
+    const passwordRules = type.password;
+    const defaultRules = { minLength: 8, uppercase: 1, lowercase: 1, digits: 1, symbols: 1, spaces: 0 };
+    const isDefault = type.password.default ?? false;
+    if (isDefault) {
+      // Support overriding default rules
+      if (!passwordRules.minLength) {
+        passwordRules.minLength = defaultRules.minLength;
+      }
+      if (!passwordRules.uppercase) {
+        passwordRules.uppercase = defaultRules.uppercase;
+      }
+      if (!passwordRules.lowercase) {
+        passwordRules.lowercase = defaultRules.lowercase;
+      }
+      if (!passwordRules.digits) {
+        passwordRules.digits = defaultRules.digits;
+      }
+      if (!passwordRules.symbols) {
+        passwordRules.symbols = defaultRules.symbols;
+      }
+      if (!passwordRules.spaces) {
+        passwordRules.spaces = defaultRules.spaces;
+      }
+    }
 
-    // Set password rules
-    passwordSchema
-      .is().min(passwordRules.minLength || 8)  // Minimum length
-      .has().uppercase(passwordRules.uppercase || 1)  // At least one uppercase letter
-      .has().lowercase(passwordRules.lowercase || 1)  // At least one lowercase letter
-      .has().digits(passwordRules.digits || 1)  // At least one digit
-      .has().symbols(passwordRules.symbols || 1)  // At least one special character
-      .has().not().spaces(passwordRules.spaces || 0);  // No spaces allowed
+    if (passwordRules.minLength) {
+      passwordSchema.is().min(passwordRules.minLength);
+    }
+    if (passwordRules.uppercase) {
+      passwordSchema.has().uppercase(passwordRules.uppercase);
+    }
+    if (passwordRules.lowercase) {
+      passwordSchema.has().lowercase(passwordRules.lowercase);
+    }
+    if (passwordRules.digits) {
+      passwordSchema.has().digits(passwordRules.digits);
+    }
+    if (passwordRules.symbols) {
+      passwordSchema.has().symbols(passwordRules.symbols);
+    }
+    if (passwordRules.spaces) {
+      passwordSchema.has().not().spaces(passwordRules.spaces);
+    }
 
     const validationResult = passwordSchema.validate(input, { details: true });
+    console.log(validationResult);
 
-    // If validationResult is true (i.e., validation passed), we skip the error handling
-    if (Array.isArray(validationResult) && validationResult.length > 0) {
-      const errorMessages = validationResult.map((rule: any) => {
-        switch (rule.validation) {
-          case 'min':
-            return 'Password must be at least 8 characters long';
-          case 'uppercase':
-            return 'Password must have at least 1 uppercase letter';
-          case 'lowercase':
-            return 'Password must have at least 1 lowercase letter';
-          case 'digits':
-            return 'Password must contain at least 1 digit';
-          case 'symbols':
-            return 'Password must contain at least 1 special character';
-          case 'spaces':
-            return 'Password must not contain spaces';
-          default:
-            return 'Password validation failed';
+    if (typeof validationResult !== 'boolean') {
+      validationResult.forEach((rule: any) => {
+        if (rule.message) {
+          const errorMsg = rule.message;
+          throw new Error(errorMsg);
         }
       });
-      throw new Error(errorMessages.join(', '));
     }
+
   }
   const isSql = type?.sql ?? false;
   if (isSql) {
