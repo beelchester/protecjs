@@ -90,3 +90,99 @@ To implement SQL validation, use the `validation()` function with your input dat
 ```bash
 validation(input, { sql: true });  // SQL validation is enabled
 ```
+
+## Validation Function
+## Overview
+The validate function is used to validate different types of inputs including SQL queries, general text, and passwords. This function helps ensure that inputs adhere to specific criteria for security and correctness.
+
+## Function: validate
+Purpose: Validate input strings based on their type, including SQL queries, general text, and passwords.
+Parameters:
+input (string): The text input that is to be validated.
+type ('sql' | 'text' | 'password'): The type of validation to perform.
+
+## Usage
+## SQL Validation
+To validate SQL queries and prevent SQL injection, use the validate function with the 'sql' type.
+
+typescript
+Copy code
+// Example of validating SQL input
+const sqlQuery = "SELECT * FROM users WHERE username = 'admin';";
+const isValidSQL = validate(sqlQuery, 'sql');
+if (isValidSQL) {
+  console.log("SQL query is valid.");
+} else {
+  console.log("SQL query is invalid.");
+}
+## Text Validation
+For general text validation, such as ensuring the input matches a specific pattern or length, use the 'text' type.
+
+typescript
+Copy code
+// Example of validating text input
+const textInput = "Hello World!";
+const isValidText = validate(textInput, 'text');
+if (isValidText) {
+  console.log("Text input is valid.");
+} else {
+  console.log("Text input is invalid.");
+}
+## Password Validation
+To validate passwords based on strength criteria, use the 'password' type.
+
+typescript
+Copy code
+// Example of validating password input
+const passwordInput = "P@ssw0rd123";
+const isValidPassword = validate(passwordInput, 'password');
+if (isValidPassword) {
+  console.log("Password is valid.");
+} else {
+  console.log("Password is invalid.");
+}
+## Integration Example
+Here’s how you can integrate the validate function with a React component, similar to the usage in example/TextInput/src/App.tsx:
+
+typescript
+Copy code
+import { useState } from 'react';
+import './App.css';
+import { TextInput } from 'protecjs';
+import { validate } from 'protecjs'; // Import the validate function
+
+function App() {
+  const [text, setText] = useState('');
+  const [isValidText, setIsValidText] = useState(true);
+
+  // Handle text change and validate input
+  const handleTextChange = (newText: string) => {
+    setText(newText);
+    const isValid = validate(newText, 'text');
+    setIsValidText(isValid);
+  };
+
+  return (
+    <div>
+      <TextInput 
+        value={text} 
+        onChange={handleTextChange}
+        dompurify={{
+          ALLOWED_TAGS: ['i', 'em', 'strong', 'a'],
+          ALLOWED_ATTR: ['href'],
+          FORBID_TAGS: ['script'],
+          FORBID_ATTR: ['onclick'],
+        }}
+      />
+      <p>Sanitized Text: {text}</p>
+      {!isValidText && <p style={{ color: 'red' }}>Text input is invalid.</p>}
+    </div>
+  );
+}
+
+export default App;
+
+## Notes
+1.Ensure the validate function is imported from the protecjs library.
+2.Customize the validation logic to fit specific use cases and security requirements.
+3.For additional validation needs, consider extending the validate function or combining it with other libraries.
