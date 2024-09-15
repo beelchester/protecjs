@@ -1,51 +1,50 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './App.css';
-import {validation}  from 'protecjs';
+import { TextInput, validate } from 'protecjs';
 
 function App() {
-  const [text, setText] = useState('');
-  const [password, setPassword] = useState('');
+  const [sqlText, setSqlText] = useState('');
+  const [emailText, setEmailText] = useState('');
+  const [rtmpText, setRtmpText] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const rules = {
-    text: { min: 5, max: 100 }
-  };
-
-  const passwordRules = {
-    minLength: 8,
-    uppercase: 1,
-    lowercase: 1,
-    digits: 1,
-    symbols: 1,
-    spaces: 0,
-  };
-
-  // Existing validateInput function, untouched
-  const validateInput = (input: string) => {
-    if (input.includes('<') || input.includes('>')) {
-      throw new Error('Invalid input: HTML tags are not allowed.');
-    }
-
-    const { min, max } = rules.text;
-    if (input.length < min || input.length > max) {
-      throw new Error(`Input must be between ${min} and ${max} characters.`);
-    }
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const input = event.target.value;
+  const handleSqlChange = (input: string) => {
     try {
-      // validation(input);
-      // validation(input, { sql: false });
-      validation(input, { sql: true });
+      validate(input, { sql: true });
       setIsValid(true);
       setErrorMessage('');
     } catch (error: any) {
       setIsValid(false);
       setErrorMessage(error.message);
     }
-    setText(input); 
+    setSqlText(input);
+  };
+
+  const handleEmailChange = (input: string) => {
+    try {
+      validate(input, { text: { validator: 'isEmail' } });
+      setIsValid(true);
+      setErrorMessage('');
+    } catch (error: any) {
+      setIsValid(false);
+      setErrorMessage(error.message);
+    }
+    setEmailText(input);
+  };
+
+  const handleRtmpChange = (input: string) => {
+    //    valid: 'rtmp://foobar.com'
+    //    invalid: 'http://foobar.com'
+    try {
+      validate(input, { text: { validator: 'isURL', args: { protocols: ['rtmp'] } } });
+      setIsValid(true);
+      setErrorMessage('');
+    } catch (error: any) {
+      setIsValid(false);
+      setErrorMessage(error.message);
+    }
+    setRtmpText(input);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,25 +62,17 @@ function App() {
 
   return (
     <div>
-      <input
-        type="text"
-        value={text}
-        onChange={handleChange}
-        placeholder="Enter text"
-      />
-      <p>Sanitized Text: {text}</p>
-
-      <input
-        type="password"
-        value={password}
-        onChange={handlePasswordChange}
-        placeholder="Enter password"
-      />
       {isValid ? (
         <p>Password is valid</p>
       ) : (
         <p style={{ color: 'red' }}>{errorMessage}</p>
       )}
+      <h3> XSS sanitization with SQL injection validation</h3>
+      <TextInput value={sqlText} onChange={handleSqlChange} />
+      <h3> XSS sanitization with Text validation (email)</h3>
+      <TextInput value={emailText} onChange={handleEmailChange} />
+      <h3> XSS sanitization with Text validation (rtmp url)</h3>
+      <TextInput value={rtmpText} onChange={handleRtmpChange} />
     </div>
   );
 }

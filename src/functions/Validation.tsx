@@ -1,6 +1,6 @@
 import { identify } from 'sql-query-identifier';
-import Validator from 'validatorjs';
 import PasswordValidator from 'password-validator';
+import validator from 'validator';
 
 const keywords = [
   "INSERT",
@@ -92,12 +92,23 @@ interface ValidationType {
   type?: 'text' | 'password';
 }
 
-export function validation(
-  input: string,
-  type: ValidationType = { type: 'text' },
-  rules: object = {},
-  passwordRules: { minLength?: number; uppercase?: number; lowercase?: number; digits?: number; symbols?: number; spaces?: number } = {}
-) {
+interface TextRules {
+  validator: keyof typeof validator;
+  args: any;
+}
+
+export default function validation(input: string, type: ValidationType = {}) {
+  // passwordRules: { minLength?: number; uppercase?: number; lowercase?: number; digits?: number; symbols?: number; spaces?: number } = {}
+  if (type.text) {
+    let textRules = type.text;
+    const validate = (validator[textRules.validator] as (input: string, options?: any) => boolean)(input,
+      textRules.args);
+
+    if (!validate) {
+      const errorMsg = textRules.args ? "Validation failed: " + textRules.validator + " " + textRules.args : "Validation failed: " + textRules.validator;
+      throw new Error(errorMsg);
+    }
+  }
   if (type.type === 'password') {
     const passwordSchema = new PasswordValidator();
 
@@ -134,20 +145,15 @@ export function validation(
       });
       throw new Error(errorMessages.join(', '));
     }
-  } else {
-    const validation = new Validator({ text: input }, rules);
-    if (validation.fails()) {
-      throw new Error(`Validation failed: ${Object.values(validation.errors.all()).join(', ')}`);
-    }
-
-    if (type.sql) {
-      const sqlQueries = extractSQLQueries(input);
-      if (sqlQueries.length > 0) {
-        for (const query of sqlQueries) {
-          const res = identify(query, { strict: false });
-          if (res[0].type !== 'UNKNOWN') {
-            throw new Error(`SQL query of type ${res[0].type} detected`);
-          }
+  }
+  const isSql = type?.sql ?? false;
+  if (isSql) {
+    const sqlQueries = extractSQLQueries(input);
+    if (sqlQueries.length > 0) {
+      for (const query of sqlQueries) {
+        const res = identify(query, { strict: false });
+        if (res[0].type !== 'UNKNOWN') {
+          throw new Error(`SQL query of type ${res[0].type} detected`);
         }
       }
     }
