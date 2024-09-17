@@ -6,7 +6,7 @@
   "license": "MIT",
   "dependencies": {
     "@types/dompurify": "^3.0.5",
-    "@types/react": "^18.3.5",
+    "@types/react": "^18.3.6",
     "@types/react-dom": "^18.3.0",
     "@types/validator": "^13.12.1",
     "@types/validatorjs": "^3.15.5",
