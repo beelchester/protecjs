@@ -90,3 +90,23 @@ To implement SQL validation, use the `validation()` function with your input dat
 ```bash
 validation(input, { sql: true });  // SQL validation is enabled
 ```
+## CSPMeta Component
+
+The CSPMeta component allows you to add a Content Security Policy (CSP) meta tag to your React app using react-helmet-async. It also supports adding additional meta tags.
+
+- policy (string, required): The Content Security Policy for the meta tag.
+
+- additionalMetaTags (optional, array): Array of meta tag objects with the following properties:
+
+   - name, httpEquiv, property (optional)
+   - content (required)
+
+### Example
+```bash
+<CSPMeta 
+  policy="default-src 'self'; script-src 'self' https://apis.google.com"
+  additionalMetaTags={[
+    { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+  ]}
+/>
+```
