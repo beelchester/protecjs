@@ -94,7 +94,6 @@ validation(input, { sql: true });  // SQL validation is enabled
 
 The CSPMeta component allows you to add a Content Security Policy (CSP) meta tag to your React app using react-helmet-async. It also supports adding additional meta tags.
 
-
 - policy (string, required): The Content Security Policy for the meta tag.
 
 - additionalMetaTags (optional, array): Array of meta tag objects with the following properties:
