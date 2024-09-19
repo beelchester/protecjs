@@ -105,7 +105,7 @@ The CSPMeta component allows you to add a Content Security Policy (CSP) meta tag
 ### Example
 ```bash
 <CSPMeta 
-  policy="default-src 'self';"
+  policy="default-src 'self'; script-src 'self' https://apis.google.com"
   additionalMetaTags={[
     { name: 'viewport', content: 'width=device-width, initial-scale=1' }
   ]}
