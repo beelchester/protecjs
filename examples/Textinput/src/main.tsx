@@ -8,7 +8,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <CSPHelmet>
       <CSPMeta
-        policy="default-src 'self'; script-src 'self' https://apis.google.com"
+        policy="default-src 'self'; script-src 'self' https://apis.google.com http://localhost:3000; connect-src 'self' http://localhost:3000 https://api.ipify.org"
         // Optionally, you can add additional meta tags to the document head
         additionalMetaTags={[
           { name: 'description', content: 'This is a sample app' },

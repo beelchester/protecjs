@@ -1,6 +1,7 @@
 import { identify } from 'sql-query-identifier';
 import PasswordValidator from 'password-validator';
 import validator from 'validator';
+import axios from 'axios';
 
 const keywords = [
   "INSERT",
@@ -108,7 +109,33 @@ interface PasswordRules {
   spaces?: number;
 }
 
-export default function validation(input: string, type: ValidationType = {}) {
+async function getIP() {
+  const url = "https://api.ipify.org?format=json";
+  let ip = '';
+  try {
+    const response = await axios.get(url);
+    ip = response.data.ip;
+  } catch (error) {
+  }
+  return ip;
+}
+
+export function sendLog(type: string, message: string, url: string) {
+  const userAgent = navigator.userAgent;
+  //TODO: convert the whole operations to async
+  const ip = getIP();
+  const body = { type, message, userAgent, ip };
+
+  axios.post(url, body)
+    .then(response => {
+      console.log('Log sent successfully:', response.data);
+    })
+    .catch(error => {
+      console.error('Error sending log:', error);
+    });
+}
+
+export default function validation(input: string, type: ValidationType = {}, sendLogsTo?: string) {
   if (type.text) {
     let textRules = type.text;
     const validate = (validator[textRules.validator] as (input: string, options?: any) => boolean)(input,
@@ -183,7 +210,11 @@ export default function validation(input: string, type: ValidationType = {}) {
       for (const query of sqlQueries) {
         const res = identify(query, { strict: false });
         if (res[0].type !== 'UNKNOWN') {
-          throw new Error(`SQL query of type ${res[0].type} detected`);
+          const errorMsg = `SQL query of type ${res[0].type} detected`;
+          if (sendLogsTo) {
+            sendLog("sql", errorMsg, sendLogsTo);
+          }
+          throw new Error(errorMsg);
         }
       }
     }

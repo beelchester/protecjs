@@ -3,6 +3,8 @@ import './App.css';
 import { TextInput, validate } from 'protecjs';
 
 function App() {
+  const sendLogsTo = "http://localhost:3000/api/log";
+
   const [sqlText, setSqlText] = useState('');
   const [emailText, setEmailText] = useState('');
   const [rtmpText, setRtmpText] = useState('');
@@ -22,7 +24,7 @@ function App() {
 
   const handleSqlChange = (input: string) => {
     try {
-      validate(input, { sql: true });
+      validate(input, { sql: true }, sendLogsTo);
       setIsSqlValid(true);
       setSqlErrorMessage('');
     } catch (error: any) {
@@ -34,7 +36,7 @@ function App() {
 
   const handleEmailChange = (input: string) => {
     try {
-      validate(input, { text: { validator: 'isEmail' } });
+      validate(input, { text: { validator: 'isEmail' } }, sendLogsTo);
       setEmailIsValid(true);
       setEmailErrorMessage('');
     } catch (error: any) {
@@ -48,7 +50,7 @@ function App() {
     //    valid: 'rtmp://foobar.com'
     //    invalid: 'http://foobar.com'
     try {
-      validate(input, { text: { validator: 'isURL', args: { protocols: ['rtmp'] } } });
+      validate(input, { text: { validator: 'isURL', args: { protocols: ['rtmp'] } } }, sendLogsTo);
       setUrlIsValid(true);
       setUrlErrorMessage('');
     } catch (error: any) {
@@ -68,7 +70,7 @@ function App() {
       spaces: 0
     };
     try {
-      validate(input, { password: passwordRules });
+      validate(input, { password: passwordRules }, sendLogsTo);
       setCustomPasswordIsValid(true);
       setCustomPassword("");
     } catch (error: any) {
@@ -81,7 +83,7 @@ function App() {
   const handleDefaultPasswordChange = (input: string) => {
     // defaultRules: { minLength: 8, uppercase: 1, lowercase: 1, digits: 1, symbols: 1, spaces: 0 };
     try {
-      validate(input, { password: { default: true } });
+      validate(input, { password: { default: true } }, sendLogsTo);
       setDefaultPasswordIsValid(true);
       setDefaultPassword("");
     } catch (error: any) {
@@ -91,38 +93,39 @@ function App() {
     setDefaultPassword(input);
   };
 
+
   return (
     <div>
       <h3> XSS sanitization with SQL injection validation</h3>
-      <TextInput value={sqlText} onChange={handleSqlChange} />
+      <TextInput value={sqlText} onChange={handleSqlChange} sendLogsTo={sendLogsTo} />
       {isSqlValid ? (
         <p>Input is valid</p>
       ) : (
         <p style={{ color: 'red' }}>{sqlErrorMessage}</p>
       )}
       <h3> XSS sanitization with Text validation (email)</h3>
-      <TextInput value={emailText} onChange={handleEmailChange} />
+      <TextInput value={emailText} onChange={handleEmailChange} sendLogsTo={sendLogsTo} />
       {isEmailValid ? (
         <p>Input is valid</p>
       ) : (
         <p style={{ color: 'red' }}>{emailErrorMessage}</p>
       )}
       <h3> XSS sanitization with Text validation (rtmp url)</h3>
-      <TextInput value={rtmpText} onChange={handleRtmpChange} />
+      <TextInput value={rtmpText} onChange={handleRtmpChange} sendLogsTo={sendLogsTo} />
       {isUrlValid ? (
         <p>Input is valid</p>
       ) : (
         <p style={{ color: 'red' }}>{urlErrorMessage}</p>
       )}
       <h3> XSS sanitization with Custom password validation</h3>
-      <TextInput value={customPassword} onChange={handlePasswordChange} />
+      <TextInput value={customPassword} onChange={handlePasswordChange} sendLogsTo={sendLogsTo} />
       {isCustomPasswordValid ? (
         <p>Input is valid</p>
       ) : (
         <p style={{ color: 'red' }}>{customPassErrorMessage}</p>
       )}
       <h3> XSS sanitization with Default password validation</h3>
-      <TextInput value={defaultPassword} onChange={handleDefaultPasswordChange} />
+      <TextInput value={defaultPassword} onChange={handleDefaultPasswordChange} sendLogsTo={sendLogsTo} />
       {isDefaultPasswordValid ? (
         <p>Input is valid</p>
       ) : (
