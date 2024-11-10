@@ -36,7 +36,7 @@ function App() {
 
   const handleEmailChange = (input: string) => {
     try {
-      validate(input, { text: { validator: 'isEmail' } }, sendLogsTo);
+      validate(input, { text: { validator: 'isEmail' } });
       setEmailIsValid(true);
       setEmailErrorMessage('');
     } catch (error: any) {
@@ -50,7 +50,7 @@ function App() {
     //    valid: 'rtmp://foobar.com'
     //    invalid: 'http://foobar.com'
     try {
-      validate(input, { text: { validator: 'isURL', args: { protocols: ['rtmp'] } } }, sendLogsTo);
+      validate(input, { text: { validator: 'isURL', args: { protocols: ['rtmp'] } } });
       setUrlIsValid(true);
       setUrlErrorMessage('');
     } catch (error: any) {
@@ -70,7 +70,7 @@ function App() {
       spaces: 0
     };
     try {
-      validate(input, { password: passwordRules }, sendLogsTo);
+      validate(input, { password: passwordRules });
       setCustomPasswordIsValid(true);
       setCustomPassword("");
     } catch (error: any) {
@@ -83,7 +83,7 @@ function App() {
   const handleDefaultPasswordChange = (input: string) => {
     // defaultRules: { minLength: 8, uppercase: 1, lowercase: 1, digits: 1, symbols: 1, spaces: 0 };
     try {
-      validate(input, { password: { default: true } }, sendLogsTo);
+      validate(input, { password: { default: true } });
       setDefaultPasswordIsValid(true);
       setDefaultPassword("");
     } catch (error: any) {

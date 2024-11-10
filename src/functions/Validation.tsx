@@ -109,7 +109,7 @@ interface PasswordRules {
   spaces?: number;
 }
 
-async function getIP() {
+async function getIp() {
   const url = "https://api.ipify.org?format=json";
   let ip = '';
   try {
@@ -120,10 +120,9 @@ async function getIP() {
   return ip;
 }
 
-export function sendLog(type: string, message: string, url: string) {
+export async function sendLog(type: string, message: string, url: string) {
   const userAgent = navigator.userAgent;
-  //TODO: convert the whole operations to async
-  const ip = getIP();
+  const ip = await getIp();
   const body = { type, message, userAgent, ip };
 
   axios.post(url, body)
