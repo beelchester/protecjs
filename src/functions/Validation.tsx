@@ -121,11 +121,12 @@ async function getIp() {
 }
 
 export async function sendLog(type: string, message: string, url: string) {
+  const server = url + "/api/log";
   const userAgent = navigator.userAgent;
   const ip = await getIp();
   const body = { type, message, userAgent, ip };
 
-  axios.post(url, body)
+  axios.post(server, body)
     .then(response => {
       console.log('Log sent successfully:', response.data);
     })

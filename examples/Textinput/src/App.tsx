@@ -3,7 +3,7 @@ import './App.css';
 import { TextInput, validate } from 'protecjs';
 
 function App() {
-  const sendLogsTo = "http://localhost:3000/api/log";
+  const sendLogsTo = "http://localhost:3000";
 
   const [sqlText, setSqlText] = useState('');
   const [emailText, setEmailText] = useState('');
