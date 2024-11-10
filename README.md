@@ -23,6 +23,7 @@ yarn dev
 
 The TextInput component is a controlled input field designed for React applications. It integrates with DOMPurify to sanitize user input, ensuring that potentially harmful content is removed before being processed or displayed. This component helps in preventing Cross-Site Scripting (XSS) attacks by cleaning up the input based on the provided or default sanitization rules.
 
+Optionally, you can send logs to influxDB through our microservice [protecjs-logger](https://github.com/beelchester/protecjs-logger).
 
 Syntax
 ```bash
@@ -30,6 +31,7 @@ Syntax
   value={value}
   onChange={onChange}
   dompurify={dompurifyConfig} // Optional
+  sendLogsTo={'microservice-ip'} // Optional
 />
 ```
 
@@ -86,9 +88,12 @@ SQL injection is a tactic used to manipulate SQL queries by injecting harmful SQ
 ### Usage
 To implement SQL validation, use the `validation()` function with your input data. Since SQL validation is off by default, you need to enable it if required.
 
+Optionally, for sql injection attempts you can send logs to influxDB through our microservice [protecjs-logger](https://github.com/beelchester/protecjs-logger).
+
 **Example**
 ```bash
 validation(input, { sql: true });  // SQL validation is enabled
+validation(input, { sql: true }, 'microservice-ip'); // SQL validation is enabled and logs are sent to microservice-ip
 ```
 ## CSPMeta Component
 
